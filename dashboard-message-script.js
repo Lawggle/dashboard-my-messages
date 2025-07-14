@@ -367,20 +367,26 @@ conversationStyles.textContent = `
         }
     }
     
-    /* Staggered animation delays for last 10 messages - newest first */
-    .single-message:nth-last-child(1) { animation-delay: 0.2s; }  /* Last message (newest) */
-    .single-message:nth-last-child(2) { animation-delay: 0.4s; }
-    .single-message:nth-last-child(3) { animation-delay: 0.6s; }
-    .single-message:nth-last-child(4) { animation-delay: 0.8s; }
-    .single-message:nth-last-child(5) { animation-delay: 1.0s; }
-    .single-message:nth-last-child(6) { animation-delay: 1.2s; }
-    .single-message:nth-last-child(7) { animation-delay: 1.4s; }
-    .single-message:nth-last-child(8) { animation-delay: 1.6s; }
-    .single-message:nth-last-child(9) { animation-delay: 1.8s; }
-    .single-message:nth-last-child(10) { animation-delay: 2.0s; } /* 10th-to-last message */
+    /* Global message animation - treats ALL messages as one sequence regardless of date containers */
+    /* Last 15 messages get staggered animation delays - newest first */
+    .single-message:nth-last-child(1) { animation-delay: 0.1s; }  /* Last message (newest) */
+    .single-message:nth-last-child(2) { animation-delay: 0.15s; }
+    .single-message:nth-last-child(3) { animation-delay: 0.2s; }
+    .single-message:nth-last-child(4) { animation-delay: 0.25s; }
+    .single-message:nth-last-child(5) { animation-delay: 0.3s; }
+    .single-message:nth-last-child(6) { animation-delay: 0.35s; }
+    .single-message:nth-last-child(7) { animation-delay: 0.4s; }
+    .single-message:nth-last-child(8) { animation-delay: 0.45s; }
+    .single-message:nth-last-child(9) { animation-delay: 0.5s; }
+    .single-message:nth-last-child(10) { animation-delay: 0.55s; }
+    .single-message:nth-last-child(11) { animation-delay: 0.6s; }
+    .single-message:nth-last-child(12) { animation-delay: 0.65s; }
+    .single-message:nth-last-child(13) { animation-delay: 0.7s; }
+    .single-message:nth-last-child(14) { animation-delay: 0.75s; }
+    .single-message:nth-last-child(15) { animation-delay: 0.8s; } /* 15th-to-last message */
     
-    /* No animation delay for older messages (beyond the last 10) */
-    .single-message:nth-last-child(n+11) { animation-delay: 0s; }
+    /* No animation delay for older messages (beyond the last 15) */
+    .single-message:nth-last-child(n+16) { animation-delay: 0s; }
     
 `;
 document.head.appendChild(conversationStyles);
@@ -561,8 +567,7 @@ async function populateConversationUI(
             : "single-message";
         messageEl.style.display = "flex";
 
-        // Add staggered animation delay
-        messageEl.style.animationDelay = `${messageIndex * 0.1}s`;
+        // Animation delay handled by CSS nth-last-child selectors
         messageIndex++;
 
         if (message.sender_type === "lead") {
@@ -625,8 +630,7 @@ async function populateConversationUI(
             : "single-message";
         attachmentMessageEl.style.display = "flex";
 
-        // Add staggered animation delay
-        attachmentMessageEl.style.animationDelay = `${messageIndex * 0.1}s`;
+        // Animation delay handled by CSS nth-last-child selectors
         messageIndex++;
 
         const attachmentName = getAttachmentName(message.attachment_url);
