@@ -367,17 +367,20 @@ conversationStyles.textContent = `
         }
     }
     
-    /* Staggered animation delays for multiple messages */
-    .single-message:nth-child(1) { animation-delay: 0.1s; }
-    .single-message:nth-child(2) { animation-delay: 0.2s; }
-    .single-message:nth-child(3) { animation-delay: 0.3s; }
-    .single-message:nth-child(4) { animation-delay: 0.4s; }
-    .single-message:nth-child(5) { animation-delay: 0.5s; }
-    .single-message:nth-child(6) { animation-delay: 0.6s; }
-    .single-message:nth-child(7) { animation-delay: 0.7s; }
-    .single-message:nth-child(8) { animation-delay: 0.8s; }
-    .single-message:nth-child(9) { animation-delay: 0.9s; }
-    .single-message:nth-child(10) { animation-delay: 1.0s; }
+    /* Staggered animation delays for last 10 messages - newest first */
+    .single-message:nth-last-child(1) { animation-delay: 0.1s; }  /* Last message (newest) */
+    .single-message:nth-last-child(2) { animation-delay: 0.2s; }
+    .single-message:nth-last-child(3) { animation-delay: 0.3s; }
+    .single-message:nth-last-child(4) { animation-delay: 0.4s; }
+    .single-message:nth-last-child(5) { animation-delay: 0.5s; }
+    .single-message:nth-last-child(6) { animation-delay: 0.6s; }
+    .single-message:nth-last-child(7) { animation-delay: 0.7s; }
+    .single-message:nth-last-child(8) { animation-delay: 0.8s; }
+    .single-message:nth-last-child(9) { animation-delay: 0.9s; }
+    .single-message:nth-last-child(10) { animation-delay: 1.0s; } /* 10th-to-last message */
+    
+    /* No animation delay for older messages (beyond the last 10) */
+    .single-message:nth-last-child(n+11) { animation-delay: 0s; }
     
 `;
 document.head.appendChild(conversationStyles);
