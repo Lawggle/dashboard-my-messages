@@ -262,11 +262,6 @@ conversationStyles.textContent = `
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
-    .div-block-648:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 167, 38, 0.15);
-    }
-    
     .chat-date {
         opacity: 0;
         transform: translateY(15px);
@@ -387,6 +382,79 @@ conversationStyles.textContent = `
     
     /* No animation delay for older messages (beyond the last 15) */
     .single-message:nth-last-child(n+16) { animation-delay: 0s; }
+    
+    /* Chat List Initial Loading Animation */
+    .user-chat {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        animation: chatItemSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    /* Staggered animation delays for chat items */
+    .user-chat:nth-child(1) { animation-delay: 0.1s; }
+    .user-chat:nth-child(2) { animation-delay: 0.2s; }
+    .user-chat:nth-child(3) { animation-delay: 0.3s; }
+    .user-chat:nth-child(4) { animation-delay: 0.4s; }
+    .user-chat:nth-child(5) { animation-delay: 0.5s; }
+    .user-chat:nth-child(6) { animation-delay: 0.6s; }
+    .user-chat:nth-child(7) { animation-delay: 0.7s; }
+    .user-chat:nth-child(8) { animation-delay: 0.8s; }
+    .user-chat:nth-child(9) { animation-delay: 0.9s; }
+    .user-chat:nth-child(10) { animation-delay: 1.0s; }
+    .user-chat:nth-child(n+11) { animation-delay: 1.1s; } /* All items beyond 10th get same delay */
+    
+    /* Chat item enhancement */
+    .user-chat {
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: pointer;
+    }
+    
+    /* New chat item animation for when items are added dynamically */
+    .user-chat.new-chat-item {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+        animation: newChatItemPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    /* Animation keyframes for chat items */
+    @keyframes chatItemSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        60% {
+            opacity: 0.8;
+            transform: translateY(-3px) scale(1.02);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    @keyframes newChatItemPop {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+        }
+        50% {
+            opacity: 0.9;
+            transform: translateY(-5px) scale(1.05);
+        }
+        70% {
+            opacity: 1;
+            transform: translateY(2px) scale(0.98);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    /* Loading state transition */
+    .chat-div {
+        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
     
 `;
 document.head.appendChild(conversationStyles);
@@ -1242,58 +1310,79 @@ async function fetchLeads() {
 
     chatList.innerHTML = "";
 
-    for (const lead of leads) {
-      const clone = template.cloneNode(true);
-      clone.style.display = "flex";
-      const fullName = lead.lead_name;
-      const initials = getInitials(fullName);
+    // Add a brief delay to show the transition from loading to content
+    setTimeout(async () => {
+      for (let i = 0; i < leads.length; i++) {
+        const lead = leads[i];
+        const clone = template.cloneNode(true);
+        clone.style.display = "flex";
 
-      const shortNameEl = clone.querySelector(".user-short-name h3");
-      if (shortNameEl) shortNameEl.textContent = initials;
+        // Reset any existing animation classes and add initial state
+        clone.classList.remove("new-chat-item");
+        clone.style.opacity = "0";
+        clone.style.transform = "translateY(20px) scale(0.95)";
 
-      const nameEls = clone.querySelectorAll(".name-div .text-block-87");
-      if (nameEls && nameEls[0]) nameEls[0].textContent = fullName;
+        const fullName = lead.lead_name;
+        const initials = getInitials(fullName);
 
-      const timestampEl = clone.querySelector(".name-div .text-block-88");
-      if (timestampEl) {
-        timestampEl.textContent = lead.last_message_timestamp
-          ? new Date(lead.last_message_timestamp).toLocaleString()
-          : "No timestamp";
-      }
+        const shortNameEl = clone.querySelector(".user-short-name h3");
+        if (shortNameEl) shortNameEl.textContent = initials;
 
-      const messageEls = clone.querySelectorAll(".message-div .text-block-87");
-      if (messageEls && messageEls[0]) {
-        let displayMessage = lead.last_message || "No message";
-        if (lead.last_message && lead.code_hash_lawyer) {
-          displayMessage = await decryptMessage(
-            lead.last_message,
-            lead.code_hash_lawyer,
-            token
-          );
+        const nameEls = clone.querySelectorAll(".name-div .text-block-87");
+        if (nameEls && nameEls[0]) nameEls[0].textContent = fullName;
+
+        const timestampEl = clone.querySelector(".name-div .text-block-88");
+        if (timestampEl) {
+          timestampEl.textContent = lead.last_message_timestamp
+            ? new Date(lead.last_message_timestamp).toLocaleString()
+            : "No timestamp";
         }
-        const maxLength = 50;
-        if (displayMessage.length > maxLength) {
-          displayMessage = displayMessage.substring(0, maxLength) + "...";
-        }
-        messageEls[0].textContent = displayMessage;
-      }
 
-      const unreadMsgEl = clone.querySelector(".div-block-652 .paragraph-38");
-      if (unreadMsgEl) {
-        const count = lead.unread_messages || 0;
-        unreadMsgEl.textContent = `${count}`;
-      }
-
-      clone.addEventListener("click", () => {
-        showConversationView();
-        loadConversation(
-          lead.lead_email,
-          lead.lead_name,
-          lead.code_hash_lawyer
+        const messageEls = clone.querySelectorAll(
+          ".message-div .text-block-87"
         );
-      });
-      chatList.appendChild(clone);
-    }
+        if (messageEls && messageEls[0]) {
+          let displayMessage = lead.last_message || "No message";
+          if (lead.last_message && lead.code_hash_lawyer) {
+            displayMessage = await decryptMessage(
+              lead.last_message,
+              lead.code_hash_lawyer,
+              token
+            );
+          }
+          const maxLength = 50;
+          if (displayMessage.length > maxLength) {
+            displayMessage = displayMessage.substring(0, maxLength) + "...";
+          }
+          messageEls[0].textContent = displayMessage;
+        }
+
+        const unreadMsgEl = clone.querySelector(".div-block-652 .paragraph-38");
+        if (unreadMsgEl) {
+          const count = lead.unread_messages || 0;
+          unreadMsgEl.textContent = `${count}`;
+        }
+
+        clone.addEventListener("click", () => {
+          showConversationView();
+          loadConversation(
+            lead.lead_email,
+            lead.lead_name,
+            lead.code_hash_lawyer
+          );
+        });
+
+        chatList.appendChild(clone);
+
+        // Trigger animation after a brief delay for each item
+        setTimeout(() => {
+          clone.style.opacity = "";
+          clone.style.transform = "";
+          clone.style.animation = `chatItemSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
+          clone.style.animationDelay = `${i * 0.1}s`;
+        }, 50);
+      }
+    }, 150);
     template.remove();
   } catch (err) {
     console.error("Error loading leads:", err);
