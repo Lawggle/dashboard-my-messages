@@ -44,34 +44,58 @@ conversationStyles.textContent = `
         background: #FEE0B1; 
     }
     
-    /* Loading spinner styles */
+    /* Modern Loading spinner styles */
     .chat-loading-container {
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 40px 20px;
         flex-direction: column;
+        opacity: 0;
+        animation: fadeInUp 0.6s ease-out forwards;
     }
     
     .chat-loading-spinner {
         width: 40px;
         height: 40px;
-        border: 4px solid #f8f9fa;
-        border-top: 4px solid #FFA726;
+        position: relative;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .chat-loading-spinner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 3px solid transparent;
+        border-top: 3px solid #FFA726;
+        border-right: 3px solid #FFA726;
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        animation: modernSpin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    }
+    
+    .chat-loading-spinner::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: calc(100% - 12px);
+        height: calc(100% - 12px);
+        border: 2px solid transparent;
+        border-bottom: 2px solid #FFB74D;
+        border-left: 2px solid #FFB74D;
+        border-radius: 50%;
+        animation: modernSpin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
     }
     
     .chat-loading-text {
-        margin-top: 16px;
+        margin-top: 20px;
         color: #666;
         font-size: 14px;
         font-weight: 500;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        animation: textFade 2s ease-in-out infinite;
     }
     
     /* Conversation loading spinner styles */
@@ -83,22 +107,114 @@ conversationStyles.textContent = `
         flex-direction: column;
         height: 100%;
         min-height: 300px;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out forwards;
     }
     
     .conversation-loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #f8f9fa;
-        border-top: 5px solid #FFA726;
+        width: 60px;
+        height: 60px;
+        position: relative;
+        animation: bounce 1.5s ease-in-out infinite;
+    }
+    
+    .conversation-loading-spinner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 4px solid transparent;
+        border-top: 4px solid #FFA726;
+        border-right: 4px solid #FFA726;
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        animation: modernSpin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    }
+    
+    .conversation-loading-spinner::after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: calc(100% - 16px);
+        height: calc(100% - 16px);
+        border: 3px solid transparent;
+        border-bottom: 3px solid #FFB74D;
+        border-left: 3px solid #FFB74D;
+        border-radius: 50%;
+        animation: modernSpin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
     }
     
     .conversation-loading-text {
-        margin-top: 20px;
+        margin-top: 25px;
         color: #666;
         font-size: 16px;
         font-weight: 500;
+        animation: textFade 2.5s ease-in-out infinite;
+    }
+    
+    /* Modern animations */
+    @keyframes modernSpin {
+        0% { 
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+        50% { 
+            transform: rotate(180deg) scale(1.1);
+            opacity: 0.8;
+        }
+        100% { 
+            transform: rotate(360deg) scale(1);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% { 
+            transform: scale(1);
+            filter: brightness(1);
+        }
+        50% { 
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% { 
+            transform: translateY(0) scale(1);
+        }
+        50% { 
+            transform: translateY(-5px) scale(1.02);
+        }
+    }
+    
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes textFade {
+        0%, 100% { 
+            opacity: 0.7;
+            transform: translateY(0);
+        }
+        50% { 
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+    }
+    
+    /* Smooth transitions for loading states */
+    .chat-div, .inside-div {
+        transition: opacity 0.3s ease-in-out;
     }
     
 `;
