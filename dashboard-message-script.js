@@ -235,6 +235,150 @@ conversationStyles.textContent = `
         transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
+    /* Message Animation Styles */
+    .single-message {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+        animation: messageSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    .single-message.left {
+        transform: translateX(-20px) translateY(10px) scale(0.95);
+        animation: messageSlideInLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    .single-message.new-message {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+        animation: newMessagePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    .single-message.new-message.left {
+        transform: translateX(-30px) translateY(20px) scale(0.9);
+        animation: newMessagePopLeft 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    .div-block-648 {
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .div-block-648:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 167, 38, 0.15);
+    }
+    
+    .chat-date {
+        opacity: 0;
+        transform: translateY(15px);
+        animation: dateSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+    }
+    
+    .div-block-651 {
+        opacity: 0;
+        animation: groupFadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    /* Message Animation Keyframes */
+    @keyframes messageSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        60% {
+            opacity: 0.8;
+            transform: translateY(-2px) scale(1.02);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    @keyframes messageSlideInLeft {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px) translateY(10px) scale(0.95);
+        }
+        60% {
+            opacity: 0.8;
+            transform: translateX(2px) translateY(-2px) scale(1.02);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0) translateY(0) scale(1);
+        }
+    }
+    
+    @keyframes newMessagePop {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+        }
+        50% {
+            opacity: 0.9;
+            transform: translateY(-5px) scale(1.05);
+        }
+        70% {
+            opacity: 1;
+            transform: translateY(2px) scale(0.98);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    @keyframes newMessagePopLeft {
+        0% {
+            opacity: 0;
+            transform: translateX(-30px) translateY(20px) scale(0.9);
+        }
+        50% {
+            opacity: 0.9;
+            transform: translateX(5px) translateY(-5px) scale(1.05);
+        }
+        70% {
+            opacity: 1;
+            transform: translateX(-2px) translateY(2px) scale(0.98);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0) translateY(0) scale(1);
+        }
+    }
+    
+    @keyframes dateSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes groupFadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    /* Staggered animation delays for multiple messages */
+    .single-message:nth-child(1) { animation-delay: 0.1s; }
+    .single-message:nth-child(2) { animation-delay: 0.2s; }
+    .single-message:nth-child(3) { animation-delay: 0.3s; }
+    .single-message:nth-child(4) { animation-delay: 0.4s; }
+    .single-message:nth-child(5) { animation-delay: 0.5s; }
+    .single-message:nth-child(6) { animation-delay: 0.6s; }
+    .single-message:nth-child(7) { animation-delay: 0.7s; }
+    .single-message:nth-child(8) { animation-delay: 0.8s; }
+    .single-message:nth-child(9) { animation-delay: 0.9s; }
+    .single-message:nth-child(10) { animation-delay: 1.0s; }
+    
 `;
 document.head.appendChild(conversationStyles);
 
@@ -395,6 +539,7 @@ async function populateConversationUI(
     dateHeaderDiv.appendChild(dateEl);
     dateGroupDiv.appendChild(dateHeaderDiv);
 
+    let messageIndex = 0;
     for (const message of dailyMessages) {
       let content = message.content;
       if (message.sender_type === "lawyer" && conversation.code_hash_lawyer) {
@@ -412,6 +557,10 @@ async function populateConversationUI(
             ? "single-message left"
             : "single-message";
         messageEl.style.display = "flex";
+
+        // Add staggered animation delay
+        messageEl.style.animationDelay = `${messageIndex * 0.1}s`;
+        messageIndex++;
 
         if (message.sender_type === "lead") {
           const bubbleEl =
@@ -472,6 +621,10 @@ async function populateConversationUI(
             ? "single-message left"
             : "single-message";
         attachmentMessageEl.style.display = "flex";
+
+        // Add staggered animation delay
+        attachmentMessageEl.style.animationDelay = `${messageIndex * 0.1}s`;
+        messageIndex++;
 
         const attachmentName = getAttachmentName(message.attachment_url);
         const attachmentIcon = getAttachmentIcon(message.attachment_url);
@@ -848,7 +1001,9 @@ async function addMessageToUI(
   if (messageContent && messageContent.trim()) {
     const messageEl = document.createElement("div");
     messageEl.className =
-      senderType === "lead" ? "single-message left" : "single-message";
+      senderType === "lead"
+        ? "single-message left new-message"
+        : "single-message new-message";
     messageEl.style.display = "flex";
 
     const currentTime = new Date().toLocaleTimeString("en-US", {
@@ -890,7 +1045,9 @@ async function addMessageToUI(
   if (attachmentUrl) {
     const attachmentMessageEl = document.createElement("div");
     attachmentMessageEl.className =
-      senderType === "lead" ? "single-message left" : "single-message";
+      senderType === "lead"
+        ? "single-message left new-message"
+        : "single-message new-message";
     attachmentMessageEl.style.display = "flex";
 
     const attachmentName = getAttachmentName(attachmentUrl);
