@@ -368,21 +368,16 @@ conversationStyles.textContent = `
     }
     
     /* Staggered animation delays for multiple messages */
-    .single-message:nth-child(1) { animation-delay: 1.0s; }
-    .single-message:nth-child(2) { animation-delay: 0.9s; }
-    .single-message:nth-child(3) { animation-delay: 0.8s; }
-    .single-message:nth-child(4) { animation-delay: 0.7s; }
-    .single-message:nth-child(5) { animation-delay: 0.6s; }
-    .single-message:nth-child(6) { animation-delay: 0.5s; }
-    .single-message:nth-child(7) { animation-delay: 0.4s; }
-    .single-message:nth-child(8) { animation-delay: 0.3s; }
-    .single-message:nth-child(9) { animation-delay: 0.2s; }
-    .single-message:nth-child(10) { animation-delay: 0.1s; }
-    
-    /* Extended reverse delays for more messages */
-    .single-message:nth-child(11) { animation-delay: 0.05s; }
-    .single-message:nth-child(12) { animation-delay: 0.0s; }
-    .single-message:nth-child(n+13) { animation-delay: 0.0s; }
+    .single-message:nth-child(1) { animation-delay: 0.1s; }
+    .single-message:nth-child(2) { animation-delay: 0.2s; }
+    .single-message:nth-child(3) { animation-delay: 0.3s; }
+    .single-message:nth-child(4) { animation-delay: 0.4s; }
+    .single-message:nth-child(5) { animation-delay: 0.5s; }
+    .single-message:nth-child(6) { animation-delay: 0.6s; }
+    .single-message:nth-child(7) { animation-delay: 0.7s; }
+    .single-message:nth-child(8) { animation-delay: 0.8s; }
+    .single-message:nth-child(9) { animation-delay: 0.9s; }
+    .single-message:nth-child(10) { animation-delay: 1.0s; }
     
 `;
 document.head.appendChild(conversationStyles);
