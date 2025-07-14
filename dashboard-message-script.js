@@ -44,7 +44,7 @@ conversationStyles.textContent = `
         background: #FEE0B1; 
     }
     
-    /* Modern Loading spinner styles */
+    /* Ultra Fluid Loading spinner styles */
     .chat-loading-container {
         display: flex;
         justify-content: center;
@@ -52,14 +52,14 @@ conversationStyles.textContent = `
         padding: 40px 20px;
         flex-direction: column;
         opacity: 0;
-        animation: fadeInUp 0.6s ease-out forwards;
+        animation: gentleFadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
     
     .chat-loading-spinner {
         width: 40px;
         height: 40px;
         position: relative;
-        animation: pulse 1.5s ease-in-out infinite;
+        animation: gentlePulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
     .chat-loading-spinner::before {
@@ -73,7 +73,7 @@ conversationStyles.textContent = `
         border-top: 3px solid #FFA726;
         border-right: 3px solid #FFA726;
         border-radius: 50%;
-        animation: modernSpin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        animation: fluidSpin 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
     
     .chat-loading-spinner::after {
@@ -87,7 +87,7 @@ conversationStyles.textContent = `
         border-bottom: 2px solid #FFB74D;
         border-left: 2px solid #FFB74D;
         border-radius: 50%;
-        animation: modernSpin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+        animation: fluidSpin 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
     }
     
     .chat-loading-text {
@@ -95,7 +95,7 @@ conversationStyles.textContent = `
         color: #666;
         font-size: 14px;
         font-weight: 500;
-        animation: textFade 2s ease-in-out infinite;
+        animation: gentleTextBreathe 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
     /* Conversation loading spinner styles */
@@ -108,14 +108,14 @@ conversationStyles.textContent = `
         height: 100%;
         min-height: 300px;
         opacity: 0;
-        animation: fadeInUp 0.8s ease-out forwards;
+        animation: gentleFadeInUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
     
     .conversation-loading-spinner {
         width: 60px;
         height: 60px;
         position: relative;
-        animation: bounce 1.5s ease-in-out infinite;
+        animation: gentleFloat 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
     .conversation-loading-spinner::before {
@@ -129,7 +129,7 @@ conversationStyles.textContent = `
         border-top: 4px solid #FFA726;
         border-right: 4px solid #FFA726;
         border-radius: 50%;
-        animation: modernSpin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        animation: fluidSpin 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
     
     .conversation-loading-spinner::after {
@@ -143,7 +143,7 @@ conversationStyles.textContent = `
         border-bottom: 3px solid #FFB74D;
         border-left: 3px solid #FFB74D;
         border-radius: 50%;
-        animation: modernSpin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+        animation: fluidSpin 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
     }
     
     .conversation-loading-text {
@@ -151,70 +151,88 @@ conversationStyles.textContent = `
         color: #666;
         font-size: 16px;
         font-weight: 500;
-        animation: textFade 2.5s ease-in-out infinite;
+        animation: gentleTextBreathe 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
-    /* Modern animations */
-    @keyframes modernSpin {
+    /* Ultra Fluid animations */
+    @keyframes fluidSpin {
         0% { 
             transform: rotate(0deg) scale(1);
+            opacity: 0.9;
+        }
+        25% { 
+            transform: rotate(90deg) scale(1.02);
             opacity: 1;
         }
         50% { 
-            transform: rotate(180deg) scale(1.1);
-            opacity: 0.8;
+            transform: rotate(180deg) scale(1.05);
+            opacity: 0.95;
+        }
+        75% { 
+            transform: rotate(270deg) scale(1.02);
+            opacity: 1;
         }
         100% { 
             transform: rotate(360deg) scale(1);
-            opacity: 1;
+            opacity: 0.9;
         }
     }
     
-    @keyframes pulse {
+    @keyframes gentlePulse {
         0%, 100% { 
             transform: scale(1);
             filter: brightness(1);
         }
         50% { 
-            transform: scale(1.05);
-            filter: brightness(1.1);
+            transform: scale(1.03);
+            filter: brightness(1.05);
         }
     }
     
-    @keyframes bounce {
+    @keyframes gentleFloat {
         0%, 100% { 
             transform: translateY(0) scale(1);
         }
+        25% { 
+            transform: translateY(-2px) scale(1.01);
+        }
         50% { 
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-4px) scale(1.02);
+        }
+        75% { 
+            transform: translateY(-2px) scale(1.01);
         }
     }
     
-    @keyframes fadeInUp {
+    @keyframes gentleFadeInUp {
         0% {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px) scale(0.95);
+        }
+        50% {
+            opacity: 0.7;
+            transform: translateY(15px) scale(0.98);
         }
         100% {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
     }
     
-    @keyframes textFade {
+    @keyframes gentleTextBreathe {
         0%, 100% { 
-            opacity: 0.7;
-            transform: translateY(0);
+            opacity: 0.75;
+            transform: translateY(0) scale(1);
         }
         50% { 
             opacity: 1;
-            transform: translateY(-2px);
+            transform: translateY(-1px) scale(1.01);
         }
     }
     
     /* Smooth transitions for loading states */
     .chat-div, .inside-div {
-        transition: opacity 0.3s ease-in-out;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
 `;
