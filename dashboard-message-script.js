@@ -383,48 +383,6 @@ conversationStyles.textContent = `
     /* No animation delay for older messages (beyond the last 15) */
     .single-message:nth-last-child(n+16) { animation-delay: 0s; }
     
-    /* Delete Popup Animation Styles */
-    .delete-popup {
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        transform-origin: var(--popup-origin-x, center) var(--popup-origin-y, center);
-    }
-    
-    .delete-popup.popup-enter {
-        opacity: 0;
-        transform: scale(0.3) translateY(-20px);
-        animation: deletePopupEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-    
-    .delete-popup.popup-exit {
-        animation: deletePopupExit 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-    
-    @keyframes deletePopupEnter {
-        0% {
-            opacity: 0;
-            transform: scale(0.3) translateY(-20px);
-        }
-        50% {
-            opacity: 0.8;
-            transform: scale(1.05) translateY(-5px);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-    
-    @keyframes deletePopupExit {
-        0% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-        100% {
-            opacity: 0;
-            transform: scale(0.8) translateY(10px);
-        }
-    }
-    
     /* Chat List Initial Loading Animation */
     .user-chat {
         opacity: 0;
@@ -1596,27 +1554,17 @@ function setupDeleteButtonListeners() {
       element.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        // Calculate click position for popup animation
-        const rect = element.getBoundingClientRect();
-        const clickX = rect.left + rect.width / 2;
-        const clickY = rect.top + rect.height / 2;
-
         if (currentConversationData && currentConversationData.magic_link) {
-          showDeleteConfirmPopup(clickX, clickY);
+          showDeleteConfirmPopup();
         } else {
-          showDeletePopup(
-            "No conversation selected to delete.",
-            clickX,
-            clickY
-          );
+          showDeletePopup("No conversation selected to delete.");
         }
       });
     });
   });
 }
 
-function showDeletePopup(message, clickX = null, clickY = null) {
+function showDeletePopup(message) {
   const deletePopup = document.querySelector(".delete-popup");
   if (!deletePopup) return;
 
@@ -1628,42 +1576,14 @@ function showDeletePopup(message, clickX = null, clickY = null) {
     messageElement.textContent = message;
   }
 
-  // Set animation origin based on click position
-  if (clickX !== null && clickY !== null) {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const originX = (clickX / viewportWidth) * 100;
-    const originY = (clickY / viewportHeight) * 100;
-
-    deletePopup.style.setProperty("--popup-origin-x", `${originX}%`);
-    deletePopup.style.setProperty("--popup-origin-y", `${originY}%`);
-  }
-
-  // Show popup with animation
-  deletePopup.classList.remove("popup-exit");
   deletePopup.style.display = "flex";
-  deletePopup.classList.add("popup-enter");
-
-  // Auto-hide after 3 seconds with exit animation
-  setTimeout(() => {
-    hideDeletePopup();
-  }, 3000);
-}
-
-function hideDeletePopup() {
-  const deletePopup = document.querySelector(".delete-popup");
-  if (!deletePopup) return;
-
-  deletePopup.classList.remove("popup-enter");
-  deletePopup.classList.add("popup-exit");
 
   setTimeout(() => {
     deletePopup.style.display = "none";
-    deletePopup.classList.remove("popup-exit");
-  }, 250);
+  }, 3000);
 }
 
-function showDeleteConfirmPopup(clickX = null, clickY = null) {
+function showDeleteConfirmPopup() {
   const deletePopup = document.querySelector(".delete-popup");
   if (!deletePopup) return;
 
@@ -1672,21 +1592,7 @@ function showDeleteConfirmPopup(clickX = null, clickY = null) {
     deletePopup.querySelector(".paragraph-6") ||
     deletePopup.querySelector("p");
 
-  // Set animation origin based on click position
-  if (clickX !== null && clickY !== null) {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const originX = (clickX / viewportWidth) * 100;
-    const originY = (clickY / viewportHeight) * 100;
-
-    deletePopup.style.setProperty("--popup-origin-x", `${originX}%`);
-    deletePopup.style.setProperty("--popup-origin-y", `${originY}%`);
-  }
-
-  // Show popup with animation
-  deletePopup.classList.remove("popup-exit");
   deletePopup.style.display = "flex";
-  deletePopup.classList.add("popup-enter");
 
   setupDeletePopupButtons();
 }
@@ -1707,14 +1613,14 @@ function setupDeletePopupButtons() {
 
   if (confirmButton) {
     confirmButton.onclick = async function () {
-      hideDeletePopup();
+      deletePopup.style.display = "none";
       await performDelete();
     };
   }
 
   if (cancelButton) {
     cancelButton.onclick = function () {
-      hideDeletePopup();
+      deletePopup.style.display = "none";
     };
   }
 }
