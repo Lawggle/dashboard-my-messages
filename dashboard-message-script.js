@@ -414,6 +414,7 @@ conversationStyles.textContent = `
         background-color: #ffe0b6 !important;
         border-left: 4px solid #ffab30 !important;
         box-shadow: 0 2px 8px rgba(255, 167, 38, 0.15) !important;
+        border-radius: 10px;
     }
     
     /* New chat item animation for when items are added dynamically */
