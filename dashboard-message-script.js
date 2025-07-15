@@ -897,6 +897,9 @@ async function handleMessageInputKeypress(e) {
 
     const messageInput = document.getElementById("msg-input");
     const attachmentInput = document.getElementById("attachment");
+    const sendButton = document.getElementById("send-button");
+    const sendButtonIcon = document.getElementById("send-icon");
+    const sendingSpinner = document.getElementById("sending-spinner");
 
     if (!messageInput) return;
 
@@ -907,6 +910,11 @@ async function handleMessageInputKeypress(e) {
       isSendingMessage = true;
       clearInputsAfterSend();
 
+      // Show spinner animation
+      if (sendButton) sendButton.disabled = true;
+      if (sendButtonIcon) sendButtonIcon.style.display = "none";
+      if (sendingSpinner) sendingSpinner.style.display = "block";
+
       try {
         await sendMessageNew(message, attachment);
       } catch (err) {
@@ -914,6 +922,10 @@ async function handleMessageInputKeypress(e) {
         alert("Failed to send message. Please try again.");
       } finally {
         isSendingMessage = false;
+        // Hide spinner animation
+        if (sendButton) sendButton.disabled = false;
+        if (sendButtonIcon) sendButtonIcon.style.display = "block";
+        if (sendingSpinner) sendingSpinner.style.display = "none";
       }
     }
   }
