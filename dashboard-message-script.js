@@ -1251,7 +1251,13 @@ async function updateChatListAfterMessage(messageContent) {
 
         const timestampEl = chatItem.querySelector(".name-div .text-block-88");
         if (timestampEl) {
-          timestampEl.textContent = new Date().toLocaleString();
+          const now = new Date();
+          // Since this is a new message being sent, it's always "today"
+          timestampEl.textContent = now.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
         }
 
         const unreadMsgEl = chatItem.querySelector(
@@ -1370,9 +1376,34 @@ async function fetchLeads() {
 
         const timestampEl = clone.querySelector(".name-div .text-block-88");
         if (timestampEl) {
-          timestampEl.textContent = lead.last_message_timestamp
-            ? new Date(lead.last_message_timestamp).toLocaleString()
-            : "No timestamp";
+          if (lead.last_message_timestamp) {
+            const messageDate = new Date(lead.last_message_timestamp);
+            const today = new Date();
+            const isToday = messageDate.toDateString() === today.toDateString();
+
+            if (isToday) {
+              // Show time only for today's messages
+              timestampEl.textContent = messageDate.toLocaleTimeString(
+                "en-US",
+                {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                }
+              );
+            } else {
+              // Show date only for other days (e.g., "April 28")
+              timestampEl.textContent = messageDate.toLocaleDateString(
+                "en-US",
+                {
+                  month: "long",
+                  day: "numeric",
+                }
+              );
+            }
+          } else {
+            timestampEl.textContent = "No timestamp";
+          }
         }
 
         const messageEls = clone.querySelectorAll(
