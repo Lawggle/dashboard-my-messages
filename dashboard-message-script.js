@@ -1319,6 +1319,7 @@ async function fetchLeads() {
     );
     const result = await res.json();
     const leads = result.leads || [];
+    console.log("Fetched leads:", leads);
 
     // Sort leads by last message timestamp (newest first)
     leads.sort((a, b) => {
