@@ -1,5 +1,20 @@
 const API_BASE_URL = "https://supabase-magiclink-api.vercel.app";
 
+// Function to detect mobile devices
+function isMobileDevice() {
+  // Check screen width (mobile-first approach)
+  const isMobileWidth = window.innerWidth <= 768;
+
+  // Check user agent for mobile devices
+  const isMobileUserAgent =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+
+  // Return true if either condition is met
+  return isMobileWidth || isMobileUserAgent;
+}
+
 async function decryptMessage(content, code_hash_lawyer, token) {
   try {
     if (!code_hash_lawyer || !content) return content;
@@ -462,6 +477,25 @@ conversationStyles.textContent = `
     /* Loading state transition */
     .chat-div {
         transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+        #conversations, #user-messages {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Ensure full width on mobile when showing conversation */
+        #user-messages {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Ensure conversations list takes full width when shown on mobile */
+        #conversations {
+            width: 100%;
+            height: 100%;
+        }
     }
     
 `;
@@ -1465,7 +1499,22 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDeleteButtonListeners();
 
   checkForPendingConversationNavigation();
+
+  // Handle window resize for mobile/desktop transitions
+  window.addEventListener("resize", handleViewportChange);
 });
+
+// Handle viewport changes (mobile to desktop transitions)
+function handleViewportChange() {
+  const conversationArea = document.getElementById("user-messages");
+  const conversationsListArea = document.getElementById("conversations");
+
+  // If we're now on desktop and both areas exist, show both
+  if (!isMobileDevice() && conversationArea && conversationsListArea) {
+    conversationArea.style.display = "block";
+    conversationsListArea.style.display = "block";
+  }
+}
 
 function checkForPendingConversationNavigation() {
   try {
@@ -1503,15 +1552,15 @@ function showConversationView() {
   const conversationArea =
     document.getElementById("user-messages") ||
     document.querySelector(".inside-div");
-  const chatListArea =
-    document.getElementById("chat-place") ||
-    document.querySelector(".chat-div");
+  const conversationsListArea = document.getElementById("conversations");
 
   if (conversationArea) {
     conversationArea.style.display = "block";
   }
-  if (chatListArea) {
-    chatListArea.style.display = "none";
+
+  // Only hide conversations list on mobile devices
+  if (isMobileDevice() && conversationsListArea) {
+    conversationsListArea.style.display = "none";
   }
 }
 
@@ -1519,15 +1568,15 @@ function showChatListView() {
   const conversationArea =
     document.getElementById("user-messages") ||
     document.querySelector(".inside-div");
-  const chatListArea =
-    document.getElementById("chat-place") ||
-    document.querySelector(".chat-div");
+  const conversationsListArea = document.getElementById("conversations");
 
-  if (conversationArea) {
+  // Only hide conversation area on mobile devices
+  if (isMobileDevice() && conversationArea) {
     conversationArea.style.display = "none";
   }
-  if (chatListArea) {
-    chatListArea.style.display = "block";
+
+  if (conversationsListArea) {
+    conversationsListArea.style.display = "block";
   }
 }
 
