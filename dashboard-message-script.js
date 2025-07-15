@@ -612,7 +612,7 @@ async function populateConversationUI(
     dateHeaderDiv.className = "div-block-647";
     const dateEl = dateTemplate.cloneNode(true);
     dateEl.textContent = dateStr;
-    dateEl.style.display = "block";
+    dateEl.style.display = "flex";
     dateHeaderDiv.appendChild(dateEl);
     dateGroupDiv.appendChild(dateHeaderDiv);
 
@@ -1057,7 +1057,7 @@ async function addMessageToUI(
     dateHeaderDiv.className = "div-block-647";
     const dateEl = dateTemplate.cloneNode(true);
     dateEl.textContent = todayStr;
-    dateEl.style.display = "block";
+    dateEl.style.display = "flex";
     dateHeaderDiv.appendChild(dateEl);
     todayGroup.appendChild(dateHeaderDiv);
     insideDiv.appendChild(todayGroup);
