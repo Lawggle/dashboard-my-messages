@@ -464,36 +464,6 @@ conversationStyles.textContent = `
         transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
-    /* Send Button Loading Animation */
-    .send-button-loading {
-        pointer-events: none;
-    }
-    
-    .send-button-spinner {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        border: 2px solid transparent;
-        border-top: 2px solid currentColor;
-        border-radius: 50%;
-        animation: sendButtonSpin 1s linear infinite;
-    }
-    
-    @keyframes sendButtonSpin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    /* Hide original content when loading */
-    .send-button-loading .original-content {
-        opacity: 0;
-        visibility: hidden;
-    }
-    
-    .send-button-loading .send-button-spinner {
-        transform: translate(-50%, -50%);
-    }
-    
 `;
 document.head.appendChild(conversationStyles);
 
@@ -889,6 +859,8 @@ async function handleSendMessage(event) {
   const messageInput = document.getElementById("msg-input");
   const attachmentInput = document.getElementById("attachment");
   const sendButton = document.getElementById("send-button");
+  const sendButtonIcon = document.getElementById("send-icon");
+  const sendingSpinner = document.getElementById("sending-spinner");
 
   if (!messageInput || !sendButton) return;
 
@@ -901,17 +873,8 @@ async function handleSendMessage(event) {
   clearInputsAfterSend();
 
   sendButton.disabled = true;
-
-  // Store original content and add spinner
-  if (!sendButton.dataset.originalContent) {
-    sendButton.dataset.originalContent = sendButton.innerHTML;
-  }
-
-  sendButton.innerHTML = `
-    <span class="original-content">${sendButton.dataset.originalContent}</span>
-    <span class="send-button-spinner"></span>
-  `;
-  sendButton.classList.add("send-button-loading");
+  sendButtonIcon.style.display = "none";
+  sendingSpinner.style.display = "block";
 
   try {
     await sendMessageNew(message, attachment);
@@ -921,8 +884,8 @@ async function handleSendMessage(event) {
   } finally {
     isSendingMessage = false;
     sendButton.disabled = false;
-    sendButton.classList.remove("send-button-loading");
-    sendButton.innerHTML = sendButton.dataset.originalContent;
+    sendButtonIcon.style.display = "block";
+    sendingSpinner.style.display = "none";
   }
 }
 
