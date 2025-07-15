@@ -409,6 +409,13 @@ conversationStyles.textContent = `
         cursor: pointer;
     }
     
+    /* Active chat highlight */
+    .user-chat.active-chat {
+        background-color: #ffe0b6 !important;
+        border-left: 4px solid #ffab30 !important;
+        box-shadow: 0 2px 8px rgba(255, 167, 38, 0.15) !important;
+    }
+    
     /* New chat item animation for when items are added dynamically */
     .user-chat.new-chat-item {
         opacity: 0;
@@ -1364,6 +1371,7 @@ async function fetchLeads() {
         }
 
         clone.addEventListener("click", () => {
+          setActiveChat(clone);
           showConversationView();
           loadConversation(
             lead.lead_email,
@@ -1702,4 +1710,15 @@ function getAttachmentIcon(url) {
   }
 
   return "📎";
+}
+
+function setActiveChat(activeChatElement) {
+  // Remove active class from all chat items
+  const allChats = document.querySelectorAll(".user-chat");
+  allChats.forEach((chat) => chat.classList.remove("active-chat"));
+
+  // Add active class to the clicked chat
+  if (activeChatElement) {
+    activeChatElement.classList.add("active-chat");
+  }
 }
