@@ -25,7 +25,7 @@ conversationStyles.textContent = `
         max-height: 70vh;
         overflow-y: auto;
         overflow-x: hidden;
-        scroll-behavior: smooth;
+        scroll-behavior: auto;
         padding-right: 10px;
     }
     .inside-div::-webkit-scrollbar { width: 8px; }
