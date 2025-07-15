@@ -1539,7 +1539,7 @@ function showDeletePopup(message) {
     messageElement.textContent = message;
   }
 
-  deletePopup.style.display = "block";
+  deletePopup.style.display = "flex";
 
   setTimeout(() => {
     deletePopup.style.display = "none";
@@ -1555,7 +1555,7 @@ function showDeleteConfirmPopup() {
     deletePopup.querySelector(".paragraph-6") ||
     deletePopup.querySelector("p");
 
-  deletePopup.style.display = "block";
+  deletePopup.style.display = "flex";
 
   setupDeletePopupButtons();
 }
