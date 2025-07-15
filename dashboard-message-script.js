@@ -466,7 +466,6 @@ conversationStyles.textContent = `
     
     /* Send Button Loading Animation */
     .send-button-loading {
-        position: relative;
         pointer-events: none;
     }
     
@@ -492,9 +491,6 @@ conversationStyles.textContent = `
     }
     
     .send-button-loading .send-button-spinner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
         transform: translate(-50%, -50%);
     }
     
