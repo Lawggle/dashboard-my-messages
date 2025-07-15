@@ -1236,6 +1236,9 @@ async function updateChatListAfterMessage(messageContent) {
       const leadName = currentConversationData.lead_name;
 
       if (nameEl && nameEl.textContent === leadName) {
+        // Check if this chat is already at the top (first child)
+        const isAlreadyAtTop = chatItem === chatList.firstElementChild;
+
         const messageEl = chatItem.querySelector(".message-div .text-block-87");
         if (messageEl) {
           const maxLength = 50;
@@ -1258,7 +1261,17 @@ async function updateChatListAfterMessage(messageContent) {
           unreadMsgEl.textContent = "0";
         }
 
-        chatList.insertBefore(chatItem, chatList.firstChild);
+        // Only move to top and animate if it's not already at the top
+        if (!isAlreadyAtTop) {
+          // Add animation class for moving to top
+          chatItem.classList.add("new-chat-item");
+          chatList.insertBefore(chatItem, chatList.firstChild);
+
+          // Remove animation class after animation completes
+          setTimeout(() => {
+            chatItem.classList.remove("new-chat-item");
+          }, 800);
+        }
         break;
       }
     }
