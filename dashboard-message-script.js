@@ -493,19 +493,19 @@ conversationStyles.textContent = `
         width: 100%;
         height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255, 167, 38, 0.3), transparent);
-        animation: attachmentSweep 0.8s ease-out;
+        animation: attachmentSweep 1.2s ease-out;
     }
     
     .attachment-icon-bounce {
-        animation: attachmentBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        animation: attachmentBounce 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
     
     .attachment-success-pop {
-        animation: attachmentSuccessPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: attachmentSuccessPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .attachment-text-pulse {
-        animation: attachmentTextPulse 0.4s ease-out;
+        animation: attachmentTextPulse 0.6s ease-out;
     }
     
     /* Attachment Animation Keyframes */
@@ -1066,7 +1066,7 @@ function handleAttachmentChange() {
       // Remove sweep animation after it completes
       setTimeout(() => {
         attachmentContainer.classList.remove("attachment-upload-animation");
-      }, 800);
+      }, 1200);
     }
 
     // Animate the icon change with bounce effect
@@ -1085,9 +1085,9 @@ function handleAttachmentChange() {
           // Remove pop animation after it completes
           setTimeout(() => {
             attachedIcon.classList.remove("attachment-success-pop");
-          }, 500);
+          }, 800);
         }
-      }, 300);
+      }, 450);
     }
 
     // Animate text change
@@ -1097,7 +1097,7 @@ function handleAttachmentChange() {
       setTimeout(() => {
         attachText.textContent = "✓";
         attachText.classList.remove("attachment-text-pulse");
-      }, 200);
+      }, 300);
     }
   } else {
     // Reset to normal state without animation (for when file is removed)
