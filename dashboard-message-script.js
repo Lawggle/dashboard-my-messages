@@ -46,12 +46,10 @@ conversationStyles.textContent = `
     .inside-div::-webkit-scrollbar { width: 8px; }
     .inside-div::-webkit-scrollbar-track { 
         background: #f8f9fa; 
-        border-radius: 10px; 
         margin: 2px;
     }
     .inside-div::-webkit-scrollbar-thumb { 
         background: #FFA726; 
-        border-radius: 10px; 
         border: 2px solid #f8f9fa;
         min-height: 30px;
     }
@@ -429,7 +427,6 @@ conversationStyles.textContent = `
         background-color: #ffe0b6 !important;
         border-left: 4px solid #ffab30 !important;
         box-shadow: 0 2px 8px rgba(255, 167, 38, 0.15) !important;
-        border-radius: 10px;
     }
     
     /* New chat item animation for when items are added dynamically */
