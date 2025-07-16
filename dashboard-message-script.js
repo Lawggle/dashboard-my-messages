@@ -479,6 +479,85 @@ conversationStyles.textContent = `
         transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
+    /* Attachment Animation Styles */
+    .attachment-upload-animation {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .attachment-upload-animation::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 167, 38, 0.3), transparent);
+        animation: attachmentSweep 0.8s ease-out;
+    }
+    
+    .attachment-icon-bounce {
+        animation: attachmentBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .attachment-success-pop {
+        animation: attachmentSuccessPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .attachment-text-pulse {
+        animation: attachmentTextPulse 0.4s ease-out;
+    }
+    
+    /* Attachment Animation Keyframes */
+    @keyframes attachmentSweep {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+    
+    @keyframes attachmentBounce {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.3) rotate(10deg);
+        }
+        100% {
+            transform: scale(1) rotate(0deg);
+        }
+    }
+    
+    @keyframes attachmentSuccessPop {
+        0% {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes attachmentTextPulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+            color: #FFA726;
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
     /* Mobile-specific styles */
     @media (max-width: 768px) {
         #conversations, #user-messages {
@@ -974,13 +1053,62 @@ function handleAttachmentChange() {
   if (!attachmentInput) return;
 
   if (attachmentInput.files[0]) {
-    if (attachIcon) attachIcon.style.display = "none";
-    if (attachedIcon) attachedIcon.style.display = "block";
-    if (attachText) attachText.textContent = "✓";
+    // Get the container element for the sweep animation
+    const attachmentContainer =
+      attachmentInput.closest(".div-block-654") ||
+      attachmentInput.closest(".attachment-container") ||
+      attachmentInput.parentElement;
+
+    // Add sweep animation to container
+    if (attachmentContainer) {
+      attachmentContainer.classList.add("attachment-upload-animation");
+
+      // Remove sweep animation after it completes
+      setTimeout(() => {
+        attachmentContainer.classList.remove("attachment-upload-animation");
+      }, 800);
+    }
+
+    // Animate the icon change with bounce effect
+    if (attachIcon) {
+      attachIcon.classList.add("attachment-icon-bounce");
+
+      setTimeout(() => {
+        attachIcon.style.display = "none";
+        attachIcon.classList.remove("attachment-icon-bounce");
+
+        // Show success icon with pop animation
+        if (attachedIcon) {
+          attachedIcon.style.display = "block";
+          attachedIcon.classList.add("attachment-success-pop");
+
+          // Remove pop animation after it completes
+          setTimeout(() => {
+            attachedIcon.classList.remove("attachment-success-pop");
+          }, 500);
+        }
+      }, 300);
+    }
+
+    // Animate text change
+    if (attachText) {
+      attachText.classList.add("attachment-text-pulse");
+
+      setTimeout(() => {
+        attachText.textContent = "✓";
+        attachText.classList.remove("attachment-text-pulse");
+      }, 200);
+    }
   } else {
+    // Reset to normal state without animation (for when file is removed)
     if (attachIcon) attachIcon.style.display = "block";
     if (attachedIcon) attachedIcon.style.display = "none";
     if (attachText) attachText.textContent = "📎";
+
+    // Remove any lingering animation classes
+    if (attachIcon) attachIcon.classList.remove("attachment-icon-bounce");
+    if (attachedIcon) attachedIcon.classList.remove("attachment-success-pop");
+    if (attachText) attachText.classList.remove("attachment-text-pulse");
   }
 }
 
