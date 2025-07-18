@@ -552,6 +552,9 @@ document.head.appendChild(conversationStyles);
 
 async function loadConversation(leadEmail, leadName, codeHashLawyer) {
   try {
+    // Clear input text and attachments when switching conversations
+    clearInputsAndAttachments();
+
     const insideDiv = document.querySelector(".inside-div");
     let savedHeaderBeforeLoading = null;
 
@@ -1132,6 +1135,43 @@ function clearInputsAfterSend() {
   if (attachIcon) attachIcon.style.display = "block";
   if (attachedIcon) attachedIcon.style.display = "none";
   if (attachText) attachText.textContent = "📎";
+}
+
+function clearInputsAndAttachments() {
+  const messageInput =
+    document.getElementById("msg-input") ||
+    document.getElementById("field") ||
+    document.querySelector('input[name="field"]') ||
+    document.querySelector(".start-message") ||
+    document.querySelector('textarea[placeholder*="message"]') ||
+    document.querySelector('input[placeholder*="message"]');
+
+  const attachmentInput = document.getElementById("attachment");
+  const attachIcon = document.getElementById("attach-icon");
+  const attachedIcon = document.getElementById("attached-icon");
+  const attachText = document.getElementById("attach-text");
+
+  // Clear message input
+  if (messageInput) {
+    messageInput.value = "";
+    messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  // Clear attachment input and reset UI
+  if (attachmentInput) {
+    attachmentInput.value = "";
+    attachmentInput.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  // Reset attachment icons and text
+  if (attachIcon) attachIcon.style.display = "block";
+  if (attachedIcon) attachedIcon.style.display = "none";
+  if (attachText) attachText.textContent = "📎";
+
+  // Remove any lingering animation classes
+  if (attachIcon) attachIcon.classList.remove("attachment-icon-bounce");
+  if (attachedIcon) attachedIcon.classList.remove("attachment-success-pop");
+  if (attachText) attachText.classList.remove("attachment-text-pulse");
 }
 
 async function sendMessageNew(content, attachment) {
