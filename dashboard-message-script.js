@@ -1157,11 +1157,27 @@ document.addEventListener("DOMContentLoaded", () => {
 function handleViewportChange() {
   const conversationArea = document.getElementById("user-messages");
   const conversationsListArea = document.getElementById("conversations");
+  const chatPlaceArea = document.getElementById("chat-place");
 
-  // If we're now on desktop and both areas exist, show both
-  if (!isMobileDevice() && conversationArea && conversationsListArea) {
-    conversationArea.style.display = "block";
+  // If we're now on desktop, show conversations list
+  if (!isMobileDevice() && conversationsListArea) {
     conversationsListArea.style.display = "block";
+
+    // If there's an active conversation, show messages and hide chat-place
+    if (window.currentConversationData && conversationArea) {
+      conversationArea.style.display = "flex";
+      if (chatPlaceArea) {
+        chatPlaceArea.style.display = "none";
+      }
+    } else {
+      // No active conversation, show chat-place and hide messages
+      if (chatPlaceArea) {
+        chatPlaceArea.style.display = "flex";
+      }
+      if (conversationArea) {
+        conversationArea.style.display = "none";
+      }
+    }
   }
 }
 
@@ -1202,9 +1218,15 @@ function showConversationView() {
     document.getElementById("user-messages") ||
     document.querySelector(".inside-div");
   const conversationsListArea = document.getElementById("conversations");
+  const chatPlaceArea = document.getElementById("chat-place");
 
   if (conversationArea) {
     conversationArea.style.display = "block";
+  }
+
+  // Hide chat-place when showing conversation
+  if (chatPlaceArea) {
+    chatPlaceArea.style.display = "none";
   }
 
   // Only hide conversations list on mobile devices
@@ -1218,10 +1240,16 @@ function showChatListView() {
     document.getElementById("user-messages") ||
     document.querySelector(".inside-div");
   const conversationsListArea = document.getElementById("conversations");
+  const chatPlaceArea = document.getElementById("chat-place");
 
-  // Only hide conversation area on mobile devices
-  if (isMobileDevice() && conversationArea) {
+  // Hide conversation area (always hide when going back to chat list)
+  if (conversationArea) {
     conversationArea.style.display = "none";
+  }
+
+  // Show chat-place when going back to chat list
+  if (chatPlaceArea) {
+    chatPlaceArea.style.display = "block";
   }
 
   if (conversationsListArea) {
