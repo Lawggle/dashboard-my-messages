@@ -688,6 +688,21 @@ async function populateConversationUI(
   const sortedMessages = messages.sort(
     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
   );
+
+  // Check if there are no messages to display
+  if (!messages || messages.length === 0) {
+    // Show no-messages component
+    const noMessagesEl = document.querySelector("#no-messages");
+    if (noMessagesEl) {
+      noMessagesEl.style.display = "flex";
+    }
+
+    setupSendMessage();
+    setupBackButtonListeners();
+    setupDeleteButtonListeners();
+    return;
+  }
+
   const messagesByDate = {};
   sortedMessages.forEach((message) => {
     const messageDate = new Date(message.timestamp);
@@ -695,6 +710,12 @@ async function populateConversationUI(
     if (!messagesByDate[dateStr]) messagesByDate[dateStr] = [];
     messagesByDate[dateStr].push(message);
   });
+
+  // Remove no-messages component if it exists since we have messages to display
+  const noMessagesEl = document.querySelector("#no-messages");
+  if (noMessagesEl) {
+    noMessagesEl.style.display = "none";
+  }
 
   for (const [dateStr, dailyMessages] of Object.entries(messagesByDate)) {
     const dateGroupDiv = document.createElement("div");
@@ -1178,6 +1199,12 @@ async function addMessageToUI(
 ) {
   const insideDiv = document.querySelector(".inside-div");
   if (!insideDiv) return;
+
+  // Hide no-messages component if it exists when adding new messages
+  const noMessagesEl = document.querySelector("#no-messages");
+  if (noMessagesEl) {
+    noMessagesEl.style.display = "none";
+  }
 
   const today = new Date();
   const todayStr = today.toLocaleDateString("en-GB");
