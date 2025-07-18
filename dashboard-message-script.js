@@ -37,7 +37,6 @@ async function decryptMessage(content, code_hash_lawyer, token) {
 const conversationStyles = document.createElement("style");
 conversationStyles.textContent = `
     .inside-div {
-        max-height: 70vh;
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: auto;
