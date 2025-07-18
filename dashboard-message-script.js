@@ -36,26 +36,6 @@ async function decryptMessage(content, code_hash_lawyer, token) {
 
 const conversationStyles = document.createElement("style");
 conversationStyles.textContent = `
-    .inside-div {
-        overflow-y: auto;
-        overflow-x: hidden;
-        scroll-behavior: auto;
-        padding-right: 10px;
-    }
-    .inside-div::-webkit-scrollbar { width: 8px; }
-    .inside-div::-webkit-scrollbar-track { 
-        background: #f8f9fa; 
-        margin: 2px;
-    }
-    .inside-div::-webkit-scrollbar-thumb { 
-        background: #FFA726; 
-        border: 2px solid #f8f9fa;
-        min-height: 30px;
-    }
-    .inside-div::-webkit-scrollbar-thumb:hover { 
-        background: #FEE0B1; 
-    }
-    
     /* Ultra Fluid Loading spinner styles */
     .chat-loading-container {
         display: flex;
