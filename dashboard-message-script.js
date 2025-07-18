@@ -1142,6 +1142,20 @@ async function fetchLeads() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize UI state - hide messages and show chat-place only on desktop
+  const conversationArea = document.getElementById("user-messages");
+  const chatPlaceArea = document.getElementById("chat-place");
+
+  // Initially hide messages
+  if (conversationArea) {
+    conversationArea.style.display = "none";
+  }
+
+  // Only show chat-place on desktop devices
+  if (chatPlaceArea && !isMobileDevice()) {
+    chatPlaceArea.style.display = "flex";
+  }
+
   fetchLeads();
   setupBackButtonListeners();
   setupDeletePopupButtons();
@@ -1159,9 +1173,11 @@ function handleViewportChange() {
   const conversationsListArea = document.getElementById("conversations");
   const chatPlaceArea = document.getElementById("chat-place");
 
-  // If we're now on desktop, show conversations list
-  if (!isMobileDevice() && conversationsListArea) {
-    conversationsListArea.style.display = "block";
+  if (!isMobileDevice()) {
+    // Desktop view
+    if (conversationsListArea) {
+      conversationsListArea.style.display = "block";
+    }
 
     // If there's an active conversation, show messages and hide chat-place
     if (window.currentConversationData && conversationArea) {
@@ -1173,6 +1189,28 @@ function handleViewportChange() {
       // No active conversation, show chat-place and hide messages
       if (chatPlaceArea) {
         chatPlaceArea.style.display = "flex";
+      }
+      if (conversationArea) {
+        conversationArea.style.display = "none";
+      }
+    }
+  } else {
+    // Mobile view - hide chat-place completely
+    if (chatPlaceArea) {
+      chatPlaceArea.style.display = "none";
+    }
+
+    // Handle mobile conversation/list visibility
+    if (window.currentConversationData && conversationArea) {
+      // Show conversation, hide list
+      conversationArea.style.display = "flex";
+      if (conversationsListArea) {
+        conversationsListArea.style.display = "none";
+      }
+    } else {
+      // Show list, hide conversation
+      if (conversationsListArea) {
+        conversationsListArea.style.display = "block";
       }
       if (conversationArea) {
         conversationArea.style.display = "none";
@@ -1224,8 +1262,8 @@ function showConversationView() {
     conversationArea.style.display = "block";
   }
 
-  // Hide chat-place when showing conversation
-  if (chatPlaceArea) {
+  // Hide chat-place when showing conversation (only on desktop)
+  if (chatPlaceArea && !isMobileDevice()) {
     chatPlaceArea.style.display = "none";
   }
 
@@ -1242,14 +1280,14 @@ function showChatListView() {
   const conversationsListArea = document.getElementById("conversations");
   const chatPlaceArea = document.getElementById("chat-place");
 
-  // Hide conversation area (always hide when going back to chat list)
+  // Hide conversation area when going back to chat list
   if (conversationArea) {
     conversationArea.style.display = "none";
   }
 
-  // Show chat-place when going back to chat list
-  if (chatPlaceArea) {
-    chatPlaceArea.style.display = "block";
+  // Show chat-place when going back to chat list (only on desktop)
+  if (chatPlaceArea && !isMobileDevice()) {
+    chatPlaceArea.style.display = "flex";
   }
 
   if (conversationsListArea) {
