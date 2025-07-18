@@ -540,12 +540,6 @@ conversationStyles.textContent = `
             transition: all 0.3s ease-in-out;
         }
         
-        /* Ensure full width on mobile when showing conversation */
-        #user-messages {
-            width: 100%;
-            height: 100%;
-        }
-        
         /* Ensure conversations list takes full width when shown on mobile */
         #conversations {
             width: 100%;
