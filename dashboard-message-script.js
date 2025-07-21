@@ -961,8 +961,12 @@ async function updateChatListAfterMessage(messageContent) {
         const unreadMsgEl = chatItem.querySelector(
           ".div-block-652 .paragraph-38"
         );
+        const unreadContainer = chatItem.querySelector(".div-block-652");
         if (unreadMsgEl) {
           unreadMsgEl.textContent = "0";
+        }
+        if (unreadContainer) {
+          unreadContainer.style.display = "none";
         }
 
         // Only move to top and animate if it's not already at the top
@@ -1160,9 +1164,17 @@ async function fetchLeads() {
         }
 
         const unreadMsgEl = clone.querySelector(".div-block-652 .paragraph-38");
-        if (unreadMsgEl) {
+        const unreadContainer = clone.querySelector(".div-block-652");
+        if (unreadMsgEl && unreadContainer) {
           const count = lead.unread_messages || 0;
           unreadMsgEl.textContent = `${count}`;
+
+          // Hide the container if count is 0
+          if (count === 0) {
+            unreadContainer.style.display = "none";
+          } else {
+            unreadContainer.style.display = "block";
+          }
         }
 
         clone.addEventListener("click", () => {
