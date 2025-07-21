@@ -111,11 +111,12 @@ async function populateConversationUI(
       const nameEl = userChatHeader.querySelector("#inside-name");
       if (nameEl) nameEl.textContent = lead_name;
 
-      // Apply random background color to the user-short-name container
+      // Apply consistent background color to the user-short-name container
       const shortNameContainer =
         userChatHeader.querySelector(".user-short-name");
       if (shortNameContainer) {
-        shortNameContainer.style.backgroundColor = getRandomBackgroundColor();
+        const consistentColor = getConsistentColor(leadEmail || lead_name);
+        shortNameContainer.style.backgroundColor = consistentColor;
       }
     }
   });
@@ -174,10 +175,11 @@ async function populateConversationUI(
     const nameEl = savedHeader.querySelector("#inside-name");
     if (nameEl) nameEl.textContent = lead_name;
 
-    // Apply random background color to the user-short-name container
+    // Apply consistent background color to the user-short-name container
     const shortNameContainer = savedHeader.querySelector(".user-short-name");
     if (shortNameContainer) {
-      shortNameContainer.style.backgroundColor = getRandomBackgroundColor();
+      const consistentColor = getConsistentColor(leadEmail || lead_name);
+      shortNameContainer.style.backgroundColor = consistentColor;
     }
 
     savedHeader.style.display = "flex";
@@ -991,9 +993,31 @@ function getInitials(name) {
     .slice(0, 2);
 }
 
+// Store color mappings for consistency
+const userColorMap = new Map();
+
 function getRandomBackgroundColor() {
   const colors = ["#A9BAD9", "#446DB3", "#8AD796", "#38BDF8", "#FFE0B6"];
   return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function getConsistentColor(identifier) {
+  // Use lead_email or lead_name as identifier for consistency
+  if (userColorMap.has(identifier)) {
+    return userColorMap.get(identifier);
+  }
+
+  const colors = ["#A9BAD9", "#446DB3", "#8AD796", "#38BDF8", "#FFE0B6"];
+  // Create a simple hash from the identifier to ensure consistency
+  let hash = 0;
+  for (let i = 0; i < identifier.length; i++) {
+    hash = identifier.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const colorIndex = Math.abs(hash) % colors.length;
+  const color = colors[colorIndex];
+
+  userColorMap.set(identifier, color);
+  return color;
 }
 
 function showLoadingInChatDiv() {
@@ -1072,10 +1096,13 @@ async function fetchLeads() {
         const shortNameEl = clone.querySelector(".user-short-name h3");
         if (shortNameEl) shortNameEl.textContent = initials;
 
-        // Apply random background color to the user-short-name container
+        // Apply consistent background color to the user-short-name container
         const shortNameContainer = clone.querySelector(".user-short-name");
         if (shortNameContainer) {
-          shortNameContainer.style.backgroundColor = getRandomBackgroundColor();
+          const consistentColor = getConsistentColor(
+            lead.lead_email || lead.lead_name
+          );
+          shortNameContainer.style.backgroundColor = consistentColor;
         }
 
         const nameEls = clone.querySelectorAll(".name-div .text-block-87");
@@ -1317,6 +1344,9 @@ function showChatListView() {
   if (conversationsListArea) {
     conversationsListArea.style.display = "block";
   }
+
+  // Clear active chat styling when going back to list
+  removeActiveChat();
 }
 
 function setupBackButtonListeners() {
@@ -1569,5 +1599,23 @@ function setActiveChat(activeChatElement) {
   // Add active class to the clicked chat
   if (activeChatElement) {
     activeChatElement.classList.add("active-chat");
+
+    // Apply the same color to the active chat's border or background
+    const shortNameContainer =
+      activeChatElement.querySelector(".user-short-name");
+    if (shortNameContainer) {
+      const currentColor = shortNameContainer.style.backgroundColor;
+      // Add a subtle border or highlight using the same color
+      activeChatElement.style.borderLeft = `3px solid ${currentColor}`;
+    }
   }
+}
+
+// Remove active styling when deselecting
+function removeActiveChat() {
+  const allChats = document.querySelectorAll(".user-chat");
+  allChats.forEach((chat) => {
+    chat.classList.remove("active-chat");
+    chat.style.borderLeft = "";
+  });
 }
