@@ -110,6 +110,13 @@ async function populateConversationUI(
 
       const nameEl = userChatHeader.querySelector("#inside-name");
       if (nameEl) nameEl.textContent = lead_name;
+
+      // Apply random background color to the user-short-name container
+      const shortNameContainer =
+        userChatHeader.querySelector(".user-short-name");
+      if (shortNameContainer) {
+        shortNameContainer.style.backgroundColor = getRandomBackgroundColor();
+      }
     }
   });
 
@@ -166,6 +173,12 @@ async function populateConversationUI(
 
     const nameEl = savedHeader.querySelector("#inside-name");
     if (nameEl) nameEl.textContent = lead_name;
+
+    // Apply random background color to the user-short-name container
+    const shortNameContainer = savedHeader.querySelector(".user-short-name");
+    if (shortNameContainer) {
+      shortNameContainer.style.backgroundColor = getRandomBackgroundColor();
+    }
 
     savedHeader.style.display = "flex";
     savedHeader.id = "inside-user-chat";
@@ -978,6 +991,11 @@ function getInitials(name) {
     .slice(0, 2);
 }
 
+function getRandomBackgroundColor() {
+  const colors = ["#A9BAD9", "#446DB3", "#8AD796", "#38BDF8", "#FFE0B6"];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
 function showLoadingInChatDiv() {
   const chatList = document.querySelector(".chat-div");
   if (!chatList) return;
@@ -1053,6 +1071,12 @@ async function fetchLeads() {
 
         const shortNameEl = clone.querySelector(".user-short-name h3");
         if (shortNameEl) shortNameEl.textContent = initials;
+
+        // Apply random background color to the user-short-name container
+        const shortNameContainer = clone.querySelector(".user-short-name");
+        if (shortNameContainer) {
+          shortNameContainer.style.backgroundColor = getRandomBackgroundColor();
+        }
 
         const nameEls = clone.querySelectorAll(".name-div .text-block-87");
         if (nameEls && nameEls[0]) nameEls[0].textContent = fullName;
