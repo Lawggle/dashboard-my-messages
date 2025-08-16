@@ -731,7 +731,7 @@ async function sendMessageNew(content, attachment) {
 
       if (attachment) {
         // Instead of reloading the conversation, just add the attachment message
-        await addMessageToUI("", "lawyer", token, null, true); // Add flag for attachment placeholder
+        await addMessageToUI("", "lawyer", token, null, true, attachment); // Pass the actual attachment file
       }
     }
 
@@ -747,7 +747,8 @@ async function addMessageToUI(
   senderType,
   token,
   attachmentUrl = null,
-  isAttachmentPlaceholder = false
+  isAttachmentPlaceholder = false,
+  attachmentFile = null
 ) {
   const insideDiv = document.querySelector(".inside-div");
   if (!insideDiv) return;
@@ -881,13 +882,18 @@ async function addMessageToUI(
       attachmentContentEl.style.gap = "8px";
 
       if (isAttachmentPlaceholder) {
-        // Show placeholder with consistent styling like loaded attachments
+        // Show placeholder with actual filename and icon like loaded attachments
+        const fileName = attachmentFile ? attachmentFile.name : "Attachment";
+        const fileIcon = attachmentFile
+          ? getAttachmentIcon(attachmentFile.name)
+          : "📎";
+
         const placeholderSpan = document.createElement("span");
         placeholderSpan.style.color = "#007bff";
         placeholderSpan.style.display = "flex";
         placeholderSpan.style.alignItems = "center";
         placeholderSpan.style.gap = "6px";
-        placeholderSpan.innerHTML = `📎 Attachment`;
+        placeholderSpan.innerHTML = `${fileIcon} ${fileName}`;
         attachmentContentEl.appendChild(placeholderSpan);
       } else {
         // Show actual attachment link
@@ -920,13 +926,18 @@ async function addMessageToUI(
       attachmentContentEl.style.gap = "8px";
 
       if (isAttachmentPlaceholder) {
-        // Show placeholder with consistent styling like loaded attachments
+        // Show placeholder with actual filename and icon like loaded attachments
+        const fileName = attachmentFile ? attachmentFile.name : "Attachment";
+        const fileIcon = attachmentFile
+          ? getAttachmentIcon(attachmentFile.name)
+          : "📎";
+
         const placeholderSpan = document.createElement("span");
         placeholderSpan.style.color = "#007bff";
         placeholderSpan.style.display = "flex";
         placeholderSpan.style.alignItems = "center";
         placeholderSpan.style.gap = "6px";
-        placeholderSpan.innerHTML = `📎 Attachment`;
+        placeholderSpan.innerHTML = `${fileIcon} ${fileName}`;
         attachmentContentEl.appendChild(placeholderSpan);
       } else {
         // Show actual attachment link
