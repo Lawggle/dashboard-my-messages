@@ -1078,19 +1078,23 @@ function getColorIdentifier(leadEmail, leadName) {
 
 // Function to ensure all chat items have consistent colors
 function applyConsistentColorsToAllChats() {
-  const chatItems = document.querySelectorAll(".user-chat");
-  chatItems.forEach((chatItem) => {
-    const shortNameContainer = chatItem.querySelector(".user-short-name");
-    const nameEl = chatItem.querySelector(".name-div .text-block-87");
+  try {
+    const chatItems = document.querySelectorAll(".user-chat");
+    chatItems.forEach((chatItem) => {
+      const shortNameContainer = chatItem.querySelector(".user-short-name");
+      const nameEl = chatItem.querySelector(".name-div .text-block-87");
 
-    if (shortNameContainer && nameEl) {
-      const leadName = nameEl.textContent;
-      // For existing chat items, we might not have email, so use name as identifier
-      const colorIdentifier = getColorIdentifier(null, leadName);
-      const consistentColor = getConsistentColor(colorIdentifier);
-      shortNameContainer.style.backgroundColor = consistentColor;
-    }
-  });
+      if (shortNameContainer && nameEl) {
+        const leadName = nameEl.textContent;
+        // For existing chat items, we might not have email, so use name as identifier
+        const colorIdentifier = getColorIdentifier(null, leadName);
+        const consistentColor = getConsistentColor(colorIdentifier);
+        shortNameContainer.style.backgroundColor = consistentColor;
+      }
+    });
+  } catch (error) {
+    console.error("Error applying consistent colors:", error);
+  }
 }
 
 function getRandomBackgroundColor() {
