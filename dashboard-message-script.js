@@ -1520,6 +1520,18 @@ function getAttachmentName(url) {
 
   const cleanFilename = filename.split("?")[0];
 
+  // Check if the filename looks like an encrypted/encoded string
+  // (contains base64-like characters, colons, or equals signs without proper extension)
+  const isEncrypted =
+    (/^[A-Za-z0-9+/=:]+$/.test(cleanFilename) &&
+      !cleanFilename.includes(".")) ||
+    cleanFilename.includes("==:") ||
+    (cleanFilename.includes("==") && cleanFilename.length > 20);
+
+  if (isEncrypted) {
+    return "Attachment";
+  }
+
   if (cleanFilename.length > 30) {
     const extension = cleanFilename.split(".").pop();
     const nameWithoutExt = cleanFilename.substring(
