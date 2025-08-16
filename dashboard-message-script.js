@@ -724,19 +724,14 @@ async function sendMessageNew(content, attachment) {
         await addMessageToUI("", "lawyer", token, attachmentUrl);
       }
     } else {
-      if (content.trim()) {
+      // Handle both text and attachment messages without reloading
+      if (content && content.trim()) {
         await addMessageToUI(content, "lawyer", token);
       }
 
       if (attachment) {
-        const leadEmail = currentConversationData?.lead_email;
-        const leadName = currentConversationData?.lead_name;
-        const codeHashLawyer =
-          currentConversationData?.conversation?.code_hash_lawyer;
-
-        setTimeout(() => {
-          loadConversation(leadEmail, leadName, codeHashLawyer);
-        }, 500);
+        // Instead of reloading the conversation, just add the attachment message
+        await addMessageToUI("", "lawyer", token, null, true); // Add flag for attachment placeholder
       }
     }
 
@@ -751,7 +746,8 @@ async function addMessageToUI(
   messageContent,
   senderType,
   token,
-  attachmentUrl = null
+  attachmentUrl = null,
+  isAttachmentPlaceholder = false
 ) {
   const insideDiv = document.querySelector(".inside-div");
   if (!insideDiv) return;
@@ -855,16 +851,14 @@ async function addMessageToUI(
     todayGroup.appendChild(messageEl);
   }
 
-  if (attachmentUrl) {
+  // Handle both actual attachment URLs and placeholders
+  if (attachmentUrl || isAttachmentPlaceholder) {
     const attachmentMessageEl = document.createElement("div");
     attachmentMessageEl.className =
       senderType === "lead"
         ? "single-message left new-message"
         : "single-message new-message";
     attachmentMessageEl.style.display = "flex";
-
-    const attachmentName = getAttachmentName(attachmentUrl);
-    const attachmentIcon = getAttachmentIcon(attachmentUrl);
 
     const currentTime = new Date().toLocaleTimeString("en-US", {
       hour: "numeric",
@@ -877,6 +871,7 @@ async function addMessageToUI(
       attachmentTimeEl.className = "text-block-88";
       attachmentTimeEl.textContent = currentTime;
       attachmentMessageEl.appendChild(attachmentTimeEl);
+      
       const attachmentBubbleEl = document.createElement("div");
       attachmentBubbleEl.className = "div-block-648";
       const attachmentContentEl = document.createElement("div");
@@ -885,23 +880,32 @@ async function addMessageToUI(
       attachmentContentEl.style.alignItems = "center";
       attachmentContentEl.style.gap = "8px";
 
-      const attachmentLink = document.createElement("a");
-      attachmentLink.href = attachmentUrl;
-      attachmentLink.target = "_blank";
-      attachmentLink.rel = "noopener noreferrer";
-      attachmentLink.style.color = "#007bff";
-      attachmentLink.style.textDecoration = "none";
-      attachmentLink.style.display = "flex";
-      attachmentLink.style.alignItems = "center";
-      attachmentLink.style.gap = "6px";
-      attachmentLink.innerHTML = `${attachmentIcon} ${attachmentName}`;
+      if (isAttachmentPlaceholder) {
+        // Show "Attachment" text for placeholder
+        attachmentContentEl.innerHTML = `📎 Attachment`;
+        attachmentContentEl.style.color = "#666";
+      } else {
+        // Show actual attachment link
+        const attachmentName = getAttachmentName(attachmentUrl);
+        const attachmentIcon = getAttachmentIcon(attachmentUrl);
 
-      attachmentContentEl.appendChild(attachmentLink);
+        const attachmentLink = document.createElement("a");
+        attachmentLink.href = attachmentUrl;
+        attachmentLink.target = "_blank";
+        attachmentLink.rel = "noopener noreferrer";
+        attachmentLink.style.color = "#007bff";
+        attachmentLink.style.textDecoration = "none";
+        attachmentLink.style.display = "flex";
+        attachmentLink.style.alignItems = "center";
+        attachmentLink.style.gap = "6px";
+        attachmentLink.innerHTML = `${attachmentIcon} ${attachmentName}`;
+
+        attachmentContentEl.appendChild(attachmentLink);
+      }
+
       attachmentBubbleEl.appendChild(attachmentContentEl);
       attachmentMessageEl.appendChild(attachmentBubbleEl);
     } else {
-      const attachmentTimeEl = document.createElement("div");
-
       const attachmentBubbleEl = document.createElement("div");
       attachmentBubbleEl.className = "div-block-648 white";
       const attachmentContentEl = document.createElement("div");
@@ -910,20 +914,33 @@ async function addMessageToUI(
       attachmentContentEl.style.alignItems = "center";
       attachmentContentEl.style.gap = "8px";
 
-      const attachmentLink = document.createElement("a");
-      attachmentLink.href = attachmentUrl;
-      attachmentLink.target = "_blank";
-      attachmentLink.rel = "noopener noreferrer";
-      attachmentLink.style.color = "#007bff";
-      attachmentLink.style.textDecoration = "none";
-      attachmentLink.style.display = "flex";
-      attachmentLink.style.alignItems = "center";
-      attachmentLink.style.gap = "6px";
-      attachmentLink.innerHTML = `${attachmentIcon} ${attachmentName}`;
+      if (isAttachmentPlaceholder) {
+        // Show "Attachment" text for placeholder
+        attachmentContentEl.innerHTML = `📎 Attachment`;
+        attachmentContentEl.style.color = "#666";
+      } else {
+        // Show actual attachment link
+        const attachmentName = getAttachmentName(attachmentUrl);
+        const attachmentIcon = getAttachmentIcon(attachmentUrl);
 
-      attachmentContentEl.appendChild(attachmentLink);
+        const attachmentLink = document.createElement("a");
+        attachmentLink.href = attachmentUrl;
+        attachmentLink.target = "_blank";
+        attachmentLink.rel = "noopener noreferrer";
+        attachmentLink.style.color = "#007bff";
+        attachmentLink.style.textDecoration = "none";
+        attachmentLink.style.display = "flex";
+        attachmentLink.style.alignItems = "center";
+        attachmentLink.style.gap = "6px";
+        attachmentLink.innerHTML = `${attachmentIcon} ${attachmentName}`;
+
+        attachmentContentEl.appendChild(attachmentLink);
+      }
+
       attachmentBubbleEl.appendChild(attachmentContentEl);
       attachmentMessageEl.appendChild(attachmentBubbleEl);
+      
+      const attachmentTimeEl = document.createElement("div");
       attachmentTimeEl.className = "text-block-88";
       attachmentTimeEl.textContent = currentTime;
       attachmentMessageEl.appendChild(attachmentTimeEl);
