@@ -15,6 +15,17 @@ function isMobileDevice() {
   return isMobileWidth || isMobileUserAgent;
 }
 
+// Function to detect if content looks like an encrypted attachment reference
+function isEncryptedAttachmentContent(content) {
+  if (!content || typeof content !== "string") return false;
+
+  // Check if content matches the pattern of encrypted attachment references
+  // Pattern: base64-like string with == followed by : and another base64-like string
+  const encryptedPattern = /^[A-Za-z0-9+/]+=*:[A-Za-z0-9+/]+=*$/;
+
+  return encryptedPattern.test(content.trim());
+}
+
 async function decryptMessage(content, code_hash_lawyer, token) {
   try {
     if (!code_hash_lawyer || !content) return content;
@@ -239,6 +250,12 @@ async function populateConversationUI(
           conversation.code_hash_lawyer,
           token
         );
+      }
+
+      // Check if this is an encrypted attachment content and replace with "Attachment"
+      const isAttachmentContent = isEncryptedAttachmentContent(content);
+      if (isAttachmentContent) {
+        content = "Attachment";
       }
 
       if (content && content.trim()) {
