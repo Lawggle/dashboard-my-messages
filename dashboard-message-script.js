@@ -1044,6 +1044,10 @@ async function updateChatListAfterMessage(messageContent) {
           const colorIdentifier = getColorIdentifier(leadEmail, leadName);
           const consistentColor = getConsistentColor(colorIdentifier);
           shortNameContainer.style.backgroundColor = consistentColor;
+
+          // Update dataset for future consistency
+          chatItem.dataset.leadEmail = leadEmail || "";
+          chatItem.dataset.leadName = leadName || "";
         }
 
         break;
@@ -1076,18 +1080,49 @@ function getColorIdentifier(leadEmail, leadName) {
   );
 }
 
+// Debug function to check color consistency (can be called from console)
+function debugColorMappings() {
+  console.log("Current color mappings:", userColorMap);
+  const chatItems = document.querySelectorAll(".user-chat");
+  chatItems.forEach((item, index) => {
+    const nameEl = item.querySelector(".name-div .text-block-87");
+    const shortNameContainer = item.querySelector(".user-short-name");
+    const leadEmail = item.dataset.leadEmail || "";
+    const leadName = item.dataset.leadName || nameEl?.textContent || "";
+    const identifier = getColorIdentifier(leadEmail, leadName);
+    const expectedColor = getConsistentColor(identifier);
+    const actualColor = shortNameContainer?.style.backgroundColor || "none";
+
+    console.log(`Chat ${index + 1}:`, {
+      leadEmail,
+      leadName,
+      identifier,
+      expectedColor,
+      actualColor,
+      matches: expectedColor === actualColor,
+    });
+  });
+}
+
 // Function to ensure all chat items have consistent colors
 function applyConsistentColorsToAllChats() {
   try {
     const chatItems = document.querySelectorAll(".user-chat");
     chatItems.forEach((chatItem) => {
       const shortNameContainer = chatItem.querySelector(".user-short-name");
-      const nameEl = chatItem.querySelector(".name-div .text-block-87");
 
-      if (shortNameContainer && nameEl) {
-        const leadName = nameEl.textContent;
-        // For existing chat items, we might not have email, so use name as identifier
-        const colorIdentifier = getColorIdentifier(null, leadName);
+      if (shortNameContainer) {
+        // Try to get lead data from dataset first (preferred)
+        let leadEmail = chatItem.dataset.leadEmail || "";
+        let leadName = chatItem.dataset.leadName || "";
+
+        // If dataset is not available, fallback to reading from DOM
+        if (!leadEmail && !leadName) {
+          const nameEl = chatItem.querySelector(".name-div .text-block-87");
+          leadName = nameEl ? nameEl.textContent : "";
+        }
+
+        const colorIdentifier = getColorIdentifier(leadEmail, leadName);
         const consistentColor = getConsistentColor(colorIdentifier);
         shortNameContainer.style.backgroundColor = consistentColor;
       }
@@ -1293,6 +1328,10 @@ async function fetchLeads() {
             lead.code_hash_lawyer
           );
         });
+
+        // Store lead data on the element for consistent color retrieval
+        clone.dataset.leadEmail = lead.lead_email || "";
+        clone.dataset.leadName = lead.lead_name || "";
 
         chatList.appendChild(clone);
 
@@ -1745,18 +1784,23 @@ function setActiveChat(activeChatElement) {
 
       // If no color is set, generate and apply the consistent color
       if (!currentColor) {
-        const nameEl = activeChatElement.querySelector(
-          ".name-div .text-block-87"
-        );
-        const leadName = nameEl ? nameEl.textContent : null;
+        // Get lead data from the element's dataset (stored during creation)
+        const leadEmail = activeChatElement.dataset.leadEmail || "";
+        const leadName = activeChatElement.dataset.leadName || "";
 
-        // Try to get lead email from current conversation data if available
-        const leadEmail = window.currentConversationData
-          ? window.currentConversationData.lead_email
-          : null;
+        // If dataset is not available, fallback to reading from DOM
+        if (!leadEmail && !leadName) {
+          const nameEl = activeChatElement.querySelector(
+            ".name-div .text-block-87"
+          );
+          const fallbackLeadName = nameEl ? nameEl.textContent : null;
+          const colorIdentifier = getColorIdentifier(null, fallbackLeadName);
+          currentColor = getConsistentColor(colorIdentifier);
+        } else {
+          const colorIdentifier = getColorIdentifier(leadEmail, leadName);
+          currentColor = getConsistentColor(colorIdentifier);
+        }
 
-        const colorIdentifier = getColorIdentifier(leadEmail, leadName);
-        currentColor = getConsistentColor(colorIdentifier);
         shortNameContainer.style.backgroundColor = currentColor;
       }
 
