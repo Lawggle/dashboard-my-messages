@@ -871,7 +871,7 @@ async function addMessageToUI(
       attachmentTimeEl.className = "text-block-88";
       attachmentTimeEl.textContent = currentTime;
       attachmentMessageEl.appendChild(attachmentTimeEl);
-      
+
       const attachmentBubbleEl = document.createElement("div");
       attachmentBubbleEl.className = "div-block-648";
       const attachmentContentEl = document.createElement("div");
@@ -881,9 +881,14 @@ async function addMessageToUI(
       attachmentContentEl.style.gap = "8px";
 
       if (isAttachmentPlaceholder) {
-        // Show "Attachment" text for placeholder
-        attachmentContentEl.innerHTML = `📎 Attachment`;
-        attachmentContentEl.style.color = "#666";
+        // Show placeholder with consistent styling like loaded attachments
+        const placeholderSpan = document.createElement("span");
+        placeholderSpan.style.color = "#007bff";
+        placeholderSpan.style.display = "flex";
+        placeholderSpan.style.alignItems = "center";
+        placeholderSpan.style.gap = "6px";
+        placeholderSpan.innerHTML = `📎 Attachment`;
+        attachmentContentEl.appendChild(placeholderSpan);
       } else {
         // Show actual attachment link
         const attachmentName = getAttachmentName(attachmentUrl);
@@ -915,9 +920,14 @@ async function addMessageToUI(
       attachmentContentEl.style.gap = "8px";
 
       if (isAttachmentPlaceholder) {
-        // Show "Attachment" text for placeholder
-        attachmentContentEl.innerHTML = `📎 Attachment`;
-        attachmentContentEl.style.color = "#666";
+        // Show placeholder with consistent styling like loaded attachments
+        const placeholderSpan = document.createElement("span");
+        placeholderSpan.style.color = "#007bff";
+        placeholderSpan.style.display = "flex";
+        placeholderSpan.style.alignItems = "center";
+        placeholderSpan.style.gap = "6px";
+        placeholderSpan.innerHTML = `📎 Attachment`;
+        attachmentContentEl.appendChild(placeholderSpan);
       } else {
         // Show actual attachment link
         const attachmentName = getAttachmentName(attachmentUrl);
@@ -939,7 +949,7 @@ async function addMessageToUI(
 
       attachmentBubbleEl.appendChild(attachmentContentEl);
       attachmentMessageEl.appendChild(attachmentBubbleEl);
-      
+
       const attachmentTimeEl = document.createElement("div");
       attachmentTimeEl.className = "text-block-88";
       attachmentTimeEl.textContent = currentTime;
