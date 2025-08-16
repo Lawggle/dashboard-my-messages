@@ -1173,7 +1173,7 @@ async function fetchLeads() {
           if (count === 0) {
             unreadContainer.style.display = "none";
           } else {
-            unreadContainer.style.display = "block";
+            unreadContainer.style.display = "flex";
           }
         }
 
