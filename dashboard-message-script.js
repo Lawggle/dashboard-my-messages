@@ -998,6 +998,12 @@ async function updateChatListAfterMessage(messageContent) {
         if (messageEl) {
           const maxLength = 50;
           let displayMessage = messageContent || "Attachment";
+
+          // Check if this is an encrypted attachment content and replace with "Attachment"
+          if (isEncryptedAttachmentContent(displayMessage)) {
+            displayMessage = "Attachment";
+          }
+
           if (displayMessage.length > maxLength) {
             displayMessage = displayMessage.substring(0, maxLength) + "...";
           }
@@ -1216,6 +1222,12 @@ async function fetchLeads() {
               token
             );
           }
+
+          // Check if this is an encrypted attachment content and replace with "Attachment"
+          if (isEncryptedAttachmentContent(displayMessage)) {
+            displayMessage = "Attachment";
+          }
+
           const maxLength = 50;
           if (displayMessage.length > maxLength) {
             displayMessage = displayMessage.substring(0, maxLength) + "...";
@@ -1261,9 +1273,6 @@ async function fetchLeads() {
           clone.style.animationDelay = `${i * 0.1}s`;
         }, 50);
       }
-
-      // Apply consistent colors to any existing chat items that might not have colors
-      applyConsistentColorsToAllChats();
     }, 150);
     template.remove();
   } catch (err) {
@@ -1290,9 +1299,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupBackButtonListeners();
   setupDeletePopupButtons();
   setupDeleteButtonListeners();
-
-  // Apply consistent colors to any chat items that might already exist
-  applyConsistentColorsToAllChats();
 
   checkForPendingConversationNavigation();
 
@@ -1700,23 +1706,20 @@ function setActiveChat(activeChatElement) {
     if (shortNameContainer) {
       let currentColor = shortNameContainer.style.backgroundColor;
 
-      // If no color is set, generate and apply the consistent color
+      // If no color is set, generate and apply the initial-based color
       if (!currentColor) {
         // Get lead data from the element's dataset (stored during creation)
-        const leadEmail = activeChatElement.dataset.leadEmail || "";
         const leadName = activeChatElement.dataset.leadName || "";
 
         // If dataset is not available, fallback to reading from DOM
-        if (!leadEmail && !leadName) {
+        if (!leadName) {
           const nameEl = activeChatElement.querySelector(
             ".name-div .text-block-87"
           );
-          const fallbackLeadName = nameEl ? nameEl.textContent : null;
-          const colorIdentifier = getColorIdentifier(null, fallbackLeadName);
-          currentColor = getConsistentColor(colorIdentifier);
+          const fallbackLeadName = nameEl ? nameEl.textContent : "";
+          currentColor = getInitialColor(fallbackLeadName);
         } else {
-          const colorIdentifier = getColorIdentifier(leadEmail, leadName);
-          currentColor = getConsistentColor(colorIdentifier);
+          currentColor = getInitialColor(leadName);
         }
 
         shortNameContainer.style.backgroundColor = currentColor;
