@@ -122,13 +122,11 @@ async function populateConversationUI(
       const nameEl = userChatHeader.querySelector("#inside-name");
       if (nameEl) nameEl.textContent = lead_name;
 
-      // Apply consistent background color to the user-short-name container
+      // Apply new initial-based background color to the user-short-name container
       const shortNameContainer =
         userChatHeader.querySelector(".user-short-name");
       if (shortNameContainer) {
-        const colorIdentifier = getColorIdentifier(leadEmail, lead_name);
-        const consistentColor = getConsistentColor(colorIdentifier);
-        shortNameContainer.style.backgroundColor = consistentColor;
+        shortNameContainer.style.backgroundColor = getInitialColor(lead_name);
       }
     }
   });
@@ -187,12 +185,10 @@ async function populateConversationUI(
     const nameEl = savedHeader.querySelector("#inside-name");
     if (nameEl) nameEl.textContent = lead_name;
 
-    // Apply consistent background color to the user-short-name container
+    // Apply new initial-based background color to the user-short-name container
     const shortNameContainer = savedHeader.querySelector(".user-short-name");
     if (shortNameContainer) {
-      const colorIdentifier = getColorIdentifier(leadEmail, lead_name);
-      const consistentColor = getConsistentColor(colorIdentifier);
-      shortNameContainer.style.backgroundColor = consistentColor;
+      shortNameContainer.style.backgroundColor = getInitialColor(lead_name);
     }
 
     savedHeader.style.display = "flex";
@@ -1038,16 +1034,10 @@ async function updateChatListAfterMessage(messageContent) {
           }, 800);
         }
 
-        // Ensure consistent background color is applied
+        // Ensure initial-based background color is applied
         const shortNameContainer = chatItem.querySelector(".user-short-name");
         if (shortNameContainer) {
-          const colorIdentifier = getColorIdentifier(leadEmail, leadName);
-          const consistentColor = getConsistentColor(colorIdentifier);
-          shortNameContainer.style.backgroundColor = consistentColor;
-
-          // Update dataset for future consistency
-          chatItem.dataset.leadEmail = leadEmail || "";
-          chatItem.dataset.leadName = leadName || "";
+          shortNameContainer.style.backgroundColor = getInitialColor(leadName);
         }
 
         break;
@@ -1068,100 +1058,27 @@ function getInitials(name) {
 }
 
 // Store color mappings for consistency
-const userColorMap = new Map();
+// New: Color palette for first letter based coloring
+const USER_INITIAL_COLORS = [
+  "#A9BAD9", // A-E
+  "#446DB3", // F-J
+  "#8AD796", // K-O
+  "#38BDF8", // P-T
+  "#FFE0B6", // U-Z
+  "#D9A9BA", // fallback
+];
 
-// Helper function to get consistent identifier for color mapping
-function getColorIdentifier(leadEmail, leadName) {
-  // Prefer email as primary identifier, fallback to name
-  return (
-    (leadEmail && leadEmail.trim()) ||
-    (leadName && leadName.trim()) ||
-    "default-user"
-  );
-}
-
-// Debug function to check color consistency (can be called from console)
-function debugColorMappings() {
-  console.log("Current color mappings:", userColorMap);
-  const chatItems = document.querySelectorAll(".user-chat");
-  chatItems.forEach((item, index) => {
-    const nameEl = item.querySelector(".name-div .text-block-87");
-    const shortNameContainer = item.querySelector(".user-short-name");
-    const leadEmail = item.dataset.leadEmail || "";
-    const leadName = item.dataset.leadName || nameEl?.textContent || "";
-    const identifier = getColorIdentifier(leadEmail, leadName);
-    const expectedColor = getConsistentColor(identifier);
-    const actualColor = shortNameContainer?.style.backgroundColor || "none";
-
-    console.log(`Chat ${index + 1}:`, {
-      leadEmail,
-      leadName,
-      identifier,
-      expectedColor,
-      actualColor,
-      matches: expectedColor === actualColor,
-    });
-  });
-}
-
-// Function to ensure all chat items have consistent colors
-function applyConsistentColorsToAllChats() {
-  try {
-    const chatItems = document.querySelectorAll(".user-chat");
-    chatItems.forEach((chatItem) => {
-      const shortNameContainer = chatItem.querySelector(".user-short-name");
-
-      if (shortNameContainer) {
-        // Try to get lead data from dataset first (preferred)
-        let leadEmail = chatItem.dataset.leadEmail || "";
-        let leadName = chatItem.dataset.leadName || "";
-
-        // If dataset is not available, fallback to reading from DOM
-        if (!leadEmail && !leadName) {
-          const nameEl = chatItem.querySelector(".name-div .text-block-87");
-          leadName = nameEl ? nameEl.textContent : "";
-        }
-
-        const colorIdentifier = getColorIdentifier(leadEmail, leadName);
-        const consistentColor = getConsistentColor(colorIdentifier);
-        shortNameContainer.style.backgroundColor = consistentColor;
-      }
-    });
-  } catch (error) {
-    console.error("Error applying consistent colors:", error);
+function getInitialColor(name) {
+  if (!name || typeof name !== "string" || !name.trim()) {
+    return USER_INITIAL_COLORS[5]; // fallback
   }
-}
-
-function getRandomBackgroundColor() {
-  const colors = ["#A9BAD9", "#446DB3", "#8AD796", "#38BDF8", "#FFE0B6"];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
-
-function getConsistentColor(identifier) {
-  // Use lead_email or lead_name as identifier for consistency
-  // Handle null/undefined identifiers
-  if (!identifier || typeof identifier !== "string") {
-    identifier = "default-user";
-  }
-
-  // Normalize identifier to ensure consistency
-  identifier = identifier.trim().toLowerCase();
-
-  if (userColorMap.has(identifier)) {
-    return userColorMap.get(identifier);
-  }
-
-  const colors = ["#A9BAD9", "#446DB3", "#8AD796", "#38BDF8", "#FFE0B6"];
-  // Create a simple hash from the identifier to ensure consistency
-  let hash = 0;
-  for (let i = 0; i < identifier.length; i++) {
-    hash = identifier.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const colorIndex = Math.abs(hash) % colors.length;
-  const color = colors[colorIndex];
-
-  userColorMap.set(identifier, color);
-  return color;
+  const firstChar = name.trim()[0].toUpperCase();
+  if (firstChar >= "A" && firstChar <= "E") return USER_INITIAL_COLORS[0];
+  if (firstChar >= "F" && firstChar <= "J") return USER_INITIAL_COLORS[1];
+  if (firstChar >= "K" && firstChar <= "O") return USER_INITIAL_COLORS[2];
+  if (firstChar >= "P" && firstChar <= "T") return USER_INITIAL_COLORS[3];
+  if (firstChar >= "U" && firstChar <= "Z") return USER_INITIAL_COLORS[4];
+  return USER_INITIAL_COLORS[5]; // fallback
 }
 
 function showLoadingInChatDiv() {
@@ -1240,15 +1157,12 @@ async function fetchLeads() {
         const shortNameEl = clone.querySelector(".user-short-name h3");
         if (shortNameEl) shortNameEl.textContent = initials;
 
-        // Apply consistent background color to the user-short-name container
+        // Apply new initial-based background color to the user-short-name container
         const shortNameContainer = clone.querySelector(".user-short-name");
         if (shortNameContainer) {
-          const colorIdentifier = getColorIdentifier(
-            lead.lead_email,
+          shortNameContainer.style.backgroundColor = getInitialColor(
             lead.lead_name
           );
-          const consistentColor = getConsistentColor(colorIdentifier);
-          shortNameContainer.style.backgroundColor = consistentColor;
         }
 
         const nameEls = clone.querySelectorAll(".name-div .text-block-87");
