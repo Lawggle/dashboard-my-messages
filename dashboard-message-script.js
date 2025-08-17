@@ -806,6 +806,10 @@ async function addMessageToUI(
   }
   if (!messageTemplate) return;
 
+  // If the message content is an encrypted attachment reference, show 'Attachment' instead
+  if (isEncryptedAttachmentContent(messageContent)) {
+    messageContent = "Attachment";
+  }
   if (messageContent && messageContent.trim()) {
     const messageEl = document.createElement("div");
     messageEl.className =
