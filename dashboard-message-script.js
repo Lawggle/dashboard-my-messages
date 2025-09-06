@@ -2,6 +2,7 @@ const API_BASE_URL = "https://supabase-magiclink-api.vercel.app";
 
 // Function to detect mobile devices
 function isMobileDevice() {
+  // test
   // Check screen width (mobile-first approach)
   const isMobileWidth = window.innerWidth <= 768;
 
