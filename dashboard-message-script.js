@@ -126,7 +126,7 @@ async function populateConversationUI(
       const shortNameContainer =
         userChatHeader.querySelector(".user-short-name");
       if (shortNameContainer) {
-        shortNameContainer.style.backgroundColor = getInitialColor(lead_name);
+        shortNameContainer.style.backgroundColor = getInitialColor(leadEmail);
       }
     }
   });
@@ -188,7 +188,7 @@ async function populateConversationUI(
     // Apply new initial-based background color to the user-short-name container
     const shortNameContainer = savedHeader.querySelector(".user-short-name");
     if (shortNameContainer) {
-      shortNameContainer.style.backgroundColor = getInitialColor(lead_name);
+      shortNameContainer.style.backgroundColor = getInitialColor(leadEmail);
     }
 
     savedHeader.style.display = "flex";
@@ -1047,7 +1047,7 @@ async function updateChatListAfterMessage(messageContent) {
         // Ensure initial-based background color is applied
         const shortNameContainer = chatItem.querySelector(".user-short-name");
         if (shortNameContainer) {
-          shortNameContainer.style.backgroundColor = getInitialColor(leadName);
+          shortNameContainer.style.backgroundColor = getInitialColor(leadEmail);
         }
 
         break;
@@ -1078,11 +1078,11 @@ const USER_INITIAL_COLORS = [
   "#D9A9BA", // fallback
 ];
 
-function getInitialColor(name) {
-  if (!name || typeof name !== "string" || !name.trim()) {
+function getInitialColor(email) {
+  if (!email || typeof email !== "string" || !email.trim()) {
     return USER_INITIAL_COLORS[5]; // fallback
   }
-  const firstChar = name.trim()[0].toUpperCase();
+  const firstChar = email.trim()[0].toUpperCase();
   if (firstChar >= "A" && firstChar <= "E") return USER_INITIAL_COLORS[0];
   if (firstChar >= "F" && firstChar <= "J") return USER_INITIAL_COLORS[1];
   if (firstChar >= "K" && firstChar <= "O") return USER_INITIAL_COLORS[2];
@@ -1171,7 +1171,7 @@ async function fetchLeads() {
         const shortNameContainer = clone.querySelector(".user-short-name");
         if (shortNameContainer) {
           shortNameContainer.style.backgroundColor = getInitialColor(
-            lead.lead_name
+            lead.lead_email
           );
         }
 
@@ -1709,17 +1709,17 @@ function setActiveChat(activeChatElement) {
       // If no color is set, generate and apply the initial-based color
       if (!currentColor) {
         // Get lead data from the element's dataset (stored during creation)
-        const leadName = activeChatElement.dataset.leadName || "";
+        const leadEmail = activeChatElement.dataset.leadEmail || "";
 
         // If dataset is not available, fallback to reading from DOM
-        if (!leadName) {
+        if (!leadEmail) {
           const nameEl = activeChatElement.querySelector(
             ".name-div .text-block-87"
           );
           const fallbackLeadName = nameEl ? nameEl.textContent : "";
           currentColor = getInitialColor(fallbackLeadName);
         } else {
-          currentColor = getInitialColor(leadName);
+          currentColor = getInitialColor(leadEmail);
         }
 
         shortNameContainer.style.backgroundColor = currentColor;
