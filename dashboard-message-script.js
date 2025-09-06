@@ -117,21 +117,36 @@ async function populateConversationUI(
   const userChatHeaders = document.querySelectorAll(".user-chat");
   userChatHeaders.forEach((userChatHeader) => {
     if (!insideDiv.contains(userChatHeader)) {
-      const initialsEl = userChatHeader.querySelector("#inside-short-name");
-      if (initialsEl) initialsEl.textContent = getInitials(lead_name);
+      // Only update if this chat header is for the current conversation
+      const headerEmail = userChatHeader.dataset.leadEmail;
+      const headerName = userChatHeader.dataset.leadName;
 
-      const nameEl = userChatHeader.querySelector("#inside-name");
-      if (nameEl) nameEl.textContent = lead_name;
-
-      // Apply new initial-based background color to the user-short-name container
-      const shortNameContainer =
-        userChatHeader.querySelector(".user-short-name");
-      if (shortNameContainer) {
-        const colorToApply = getInitialColor(leadEmail);
+      // Check if this header matches the current conversation
+      if (headerEmail === leadEmail || headerName === lead_name) {
         console.log(
-          `🎨 populateConversationUI: Setting color for header (${leadEmail}) -> ${colorToApply}`
+          `🎨 populateConversationUI: Updating header for current conversation (${leadEmail})`
         );
-        shortNameContainer.style.backgroundColor = colorToApply;
+
+        const initialsEl = userChatHeader.querySelector("#inside-short-name");
+        if (initialsEl) initialsEl.textContent = getInitials(lead_name);
+
+        const nameEl = userChatHeader.querySelector("#inside-name");
+        if (nameEl) nameEl.textContent = lead_name;
+
+        // Apply new initial-based background color to the user-short-name container
+        const shortNameContainer =
+          userChatHeader.querySelector(".user-short-name");
+        if (shortNameContainer) {
+          const colorToApply = getInitialColor(leadEmail);
+          console.log(
+            `🎨 populateConversationUI: Setting color for header (${leadEmail}) -> ${colorToApply}`
+          );
+          shortNameContainer.style.backgroundColor = colorToApply;
+        }
+      } else {
+        console.log(
+          `🎨 populateConversationUI: Skipping header for different conversation (${headerEmail})`
+        );
       }
     }
   });
