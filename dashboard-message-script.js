@@ -127,7 +127,11 @@ async function populateConversationUI(
       const shortNameContainer =
         userChatHeader.querySelector(".user-short-name");
       if (shortNameContainer) {
-        shortNameContainer.style.backgroundColor = getInitialColor(leadEmail);
+        const colorToApply = getInitialColor(leadEmail);
+        console.log(
+          `🎨 populateConversationUI: Setting color for header (${leadEmail}) -> ${colorToApply}`
+        );
+        shortNameContainer.style.backgroundColor = colorToApply;
       }
     }
   });
@@ -189,7 +193,11 @@ async function populateConversationUI(
     // Apply new initial-based background color to the user-short-name container
     const shortNameContainer = savedHeader.querySelector(".user-short-name");
     if (shortNameContainer) {
-      shortNameContainer.style.backgroundColor = getInitialColor(leadEmail);
+      const colorToApply = getInitialColor(leadEmail);
+      console.log(
+        `🎨 populateConversationUI (savedHeader): Setting color for (${leadEmail}) -> ${colorToApply}`
+      );
+      shortNameContainer.style.backgroundColor = colorToApply;
     }
 
     savedHeader.style.display = "flex";
@@ -1048,7 +1056,11 @@ async function updateChatListAfterMessage(messageContent) {
         // Ensure initial-based background color is applied
         const shortNameContainer = chatItem.querySelector(".user-short-name");
         if (shortNameContainer) {
-          shortNameContainer.style.backgroundColor = getInitialColor(leadEmail);
+          const colorToApply = getInitialColor(leadEmail);
+          console.log(
+            `🎨 updateChatListAfterMessage: Setting color for (${leadEmail}) -> ${colorToApply}`
+          );
+          shortNameContainer.style.backgroundColor = colorToApply;
         }
 
         break;
