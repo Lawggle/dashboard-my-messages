@@ -1080,16 +1080,43 @@ const USER_INITIAL_COLORS = [
 ];
 
 function getInitialColor(email) {
+  console.log(`🔍 getInitialColor: Input email: "${email}"`);
+
   if (!email || typeof email !== "string" || !email.trim()) {
+    console.log(`🎨 getInitialColor: Invalid email, returning fallback color`);
     return USER_INITIAL_COLORS[5]; // fallback
   }
+
   const firstChar = email.trim()[0].toUpperCase();
-  if (firstChar >= "A" && firstChar <= "E") return USER_INITIAL_COLORS[0];
-  if (firstChar >= "F" && firstChar <= "J") return USER_INITIAL_COLORS[1];
-  if (firstChar >= "K" && firstChar <= "O") return USER_INITIAL_COLORS[2];
-  if (firstChar >= "P" && firstChar <= "T") return USER_INITIAL_COLORS[3];
-  if (firstChar >= "U" && firstChar <= "Z") return USER_INITIAL_COLORS[4];
-  return USER_INITIAL_COLORS[5]; // fallback
+  console.log(`🎨 getInitialColor: First character: "${firstChar}"`);
+
+  let colorIndex;
+  let colorResult;
+
+  if (firstChar >= "A" && firstChar <= "E") {
+    colorIndex = 0;
+    colorResult = USER_INITIAL_COLORS[0];
+  } else if (firstChar >= "F" && firstChar <= "J") {
+    colorIndex = 1;
+    colorResult = USER_INITIAL_COLORS[1];
+  } else if (firstChar >= "K" && firstChar <= "O") {
+    colorIndex = 2;
+    colorResult = USER_INITIAL_COLORS[2];
+  } else if (firstChar >= "P" && firstChar <= "T") {
+    colorIndex = 3;
+    colorResult = USER_INITIAL_COLORS[3];
+  } else if (firstChar >= "U" && firstChar <= "Z") {
+    colorIndex = 4;
+    colorResult = USER_INITIAL_COLORS[4];
+  } else {
+    colorIndex = 5;
+    colorResult = USER_INITIAL_COLORS[5]; // fallback
+  }
+
+  console.log(
+    `🎨 getInitialColor: Color index ${colorIndex} -> ${colorResult}`
+  );
+  return colorResult;
 }
 
 function showLoadingInChatDiv() {
@@ -1171,9 +1198,11 @@ async function fetchLeads() {
         // Apply new initial-based background color to the user-short-name container
         const shortNameContainer = clone.querySelector(".user-short-name");
         if (shortNameContainer) {
-          shortNameContainer.style.backgroundColor = getInitialColor(
-            lead.lead_email
+          const colorToApply = getInitialColor(lead.lead_email);
+          console.log(
+            `🎨 fetchLeads: Setting color for ${lead.lead_name} (${lead.lead_email}) -> ${colorToApply}`
           );
+          shortNameContainer.style.backgroundColor = colorToApply;
         }
 
         const nameEls = clone.querySelectorAll(".name-div .text-block-87");
@@ -1701,11 +1730,23 @@ function setActiveChat(activeChatElement) {
   if (activeChatElement) {
     activeChatElement.classList.add("active-chat");
 
+    console.log("🔍 setActiveChat: Processing chat element", activeChatElement);
+
     // Apply the same color to the active chat's border or background
     const shortNameContainer =
       activeChatElement.querySelector(".user-short-name");
     if (shortNameContainer) {
       let currentColor = shortNameContainer.style.backgroundColor;
+
+      console.log(
+        `🎨 setActiveChat: Current background color: "${currentColor}"`
+      );
+      console.log(
+        `🎨 setActiveChat: Dataset leadEmail: "${activeChatElement.dataset.leadEmail}"`
+      );
+      console.log(
+        `🎨 setActiveChat: Dataset leadName: "${activeChatElement.dataset.leadName}"`
+      );
 
       // If no color is set, generate and apply the initial-based color
       if (!currentColor) {
@@ -1715,17 +1756,35 @@ function setActiveChat(activeChatElement) {
         // If dataset is not available, fallback to reading email from other sources
         if (!leadEmail) {
           // As a last resort, we'll use a fallback color since we can't determine the email
-          console.warn("No leadEmail found in dataset or DOM for chat element");
+          console.warn(
+            "❌ setActiveChat: No leadEmail found in dataset or DOM for chat element"
+          );
           currentColor = USER_INITIAL_COLORS[5]; // fallback color
         } else {
+          console.log(
+            `🎨 setActiveChat: Generating color for email: "${leadEmail}"`
+          );
           currentColor = getInitialColor(leadEmail);
+          console.log(`🎨 setActiveChat: Generated color: "${currentColor}"`);
         }
 
+        console.log(
+          `🎨 setActiveChat: Setting background color to: "${currentColor}"`
+        );
         shortNameContainer.style.backgroundColor = currentColor;
+      } else {
+        console.log(
+          `🎨 setActiveChat: Using existing color: "${currentColor}"`
+        );
       }
 
       // Add a subtle border or highlight using the same color
       activeChatElement.style.borderLeft = `3px solid ${currentColor}`;
+      console.log(
+        `🎨 setActiveChat: Applied border with color: "${currentColor}"`
+      );
+    } else {
+      console.warn("❌ setActiveChat: No .user-short-name container found");
     }
   }
 }
