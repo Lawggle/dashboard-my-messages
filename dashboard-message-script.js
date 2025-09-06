@@ -1712,13 +1712,11 @@ function setActiveChat(activeChatElement) {
         // Get lead data from the element's dataset (stored during creation)
         const leadEmail = activeChatElement.dataset.leadEmail || "";
 
-        // If dataset is not available, fallback to reading from DOM
+        // If dataset is not available, fallback to reading email from other sources
         if (!leadEmail) {
-          const nameEl = activeChatElement.querySelector(
-            ".name-div .text-block-87"
-          );
-          const fallbackLeadName = nameEl ? nameEl.textContent : "";
-          currentColor = getInitialColor(fallbackLeadName);
+          // As a last resort, we'll use a fallback color since we can't determine the email
+          console.warn("No leadEmail found in dataset or DOM for chat element");
+          currentColor = USER_INITIAL_COLORS[5]; // fallback color
         } else {
           currentColor = getInitialColor(leadEmail);
         }
