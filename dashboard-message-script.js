@@ -1804,12 +1804,6 @@ function setActiveChat(activeChatElement) {
           `🎨 setActiveChat: Using existing color: "${currentColor}"`
         );
       }
-
-      // Add a subtle border or highlight using the same color
-      activeChatElement.style.borderLeft = `3px solid ${currentColor}`;
-      console.log(
-        `🎨 setActiveChat: Applied border with color: "${currentColor}"`
-      );
     } else {
       console.warn("❌ setActiveChat: No .user-short-name container found");
     }
@@ -1821,6 +1815,5 @@ function removeActiveChat() {
   const allChats = document.querySelectorAll(".user-chat");
   allChats.forEach((chat) => {
     chat.classList.remove("active-chat");
-    chat.style.borderLeft = "";
   });
 }
