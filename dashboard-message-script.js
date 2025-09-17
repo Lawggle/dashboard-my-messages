@@ -299,7 +299,7 @@ async function populateConversationUI(
           const contentEl =
             bubbleEl.querySelector(".paragraph-35") ||
             document.createElement("p");
-          contentEl.className = "paragraph-35";
+          contentEl.className = "paragraph-35 text-white";
           contentEl.textContent = content;
           if (!bubbleEl.contains(contentEl)) bubbleEl.appendChild(contentEl);
           if (!messageEl.contains(bubbleEl)) messageEl.appendChild(bubbleEl);
@@ -361,7 +361,7 @@ async function populateConversationUI(
           const attachmentBubbleEl = document.createElement("div");
           attachmentBubbleEl.className = "div-block-648 white";
           const attachmentContentEl = document.createElement("div");
-          attachmentContentEl.className = "paragraph-35";
+          attachmentContentEl.className = "paragraph-35 text-white";
           attachmentContentEl.style.display = "flex";
           attachmentContentEl.style.alignItems = "center";
           attachmentContentEl.style.gap = "8px";
@@ -865,7 +865,7 @@ async function addMessageToUI(
       const bubbleEl = document.createElement("div");
       bubbleEl.className = "div-block-648 white";
       const contentEl = document.createElement("p");
-      contentEl.className = "paragraph-35";
+      contentEl.className = "paragraph-35 text-white";
       contentEl.textContent = messageContent;
       contentEl.style.display = "block";
       bubbleEl.appendChild(contentEl);
