@@ -370,8 +370,8 @@ async function populateConversationUI(
           attachmentLink.href = message.attachment_url;
           attachmentLink.target = "_blank";
           attachmentLink.rel = "noopener noreferrer";
-          attachmentLink.style.color = "#007bff";
-          attachmentLink.style.textDecoration = "none";
+          attachmentLink.style.color = "#fff";
+          attachmentLink.style.textDecoration = "underline";
           attachmentLink.style.display = "flex";
           attachmentLink.style.alignItems = "center";
           attachmentLink.style.gap = "6px";
@@ -413,8 +413,8 @@ async function populateConversationUI(
           attachmentLink.href = message.attachment_url;
           attachmentLink.target = "_blank";
           attachmentLink.rel = "noopener noreferrer";
-          attachmentLink.style.color = "#007bff";
-          attachmentLink.style.textDecoration = "none";
+          attachmentLink.style.color = "#fff";
+          attachmentLink.style.textDecoration = "underline";
           attachmentLink.style.display = "flex";
           attachmentLink.style.alignItems = "center";
           attachmentLink.style.gap = "6px";
@@ -915,7 +915,8 @@ async function addMessageToUI(
           : "📎";
 
         const placeholderSpan = document.createElement("span");
-        placeholderSpan.style.color = "#007bff";
+        placeholderSpan.style.color = "#fff";
+        placeholderSpan.style.textDecoration = "underline";
         placeholderSpan.style.display = "flex";
         placeholderSpan.style.alignItems = "center";
         placeholderSpan.style.gap = "6px";
@@ -930,8 +931,8 @@ async function addMessageToUI(
         attachmentLink.href = attachmentUrl;
         attachmentLink.target = "_blank";
         attachmentLink.rel = "noopener noreferrer";
-        attachmentLink.style.color = "#007bff";
-        attachmentLink.style.textDecoration = "none";
+        attachmentLink.style.color = "#fff";
+        attachmentLink.style.textDecoration = "underline";
         attachmentLink.style.display = "flex";
         attachmentLink.style.alignItems = "center";
         attachmentLink.style.gap = "6px";
@@ -959,7 +960,7 @@ async function addMessageToUI(
           : "📎";
 
         const placeholderSpan = document.createElement("span");
-        placeholderSpan.style.color = "#007bff";
+        placeholderSpan.style.color = "#fff";
         placeholderSpan.style.display = "flex";
         placeholderSpan.style.alignItems = "center";
         placeholderSpan.style.gap = "6px";
@@ -974,8 +975,8 @@ async function addMessageToUI(
         attachmentLink.href = attachmentUrl;
         attachmentLink.target = "_blank";
         attachmentLink.rel = "noopener noreferrer";
-        attachmentLink.style.color = "#007bff";
-        attachmentLink.style.textDecoration = "none";
+        attachmentLink.style.color = "#fff";
+        attachmentLink.style.textDecoration = "underline";
         attachmentLink.style.display = "flex";
         attachmentLink.style.alignItems = "center";
         attachmentLink.style.gap = "6px";
