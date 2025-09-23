@@ -370,7 +370,7 @@ async function populateConversationUI(
           attachmentLink.href = message.attachment_url;
           attachmentLink.target = "_blank";
           attachmentLink.rel = "noopener noreferrer";
-          attachmentLink.style.color = "#fff";
+          attachmentLink.style.color = "#333";
           attachmentLink.style.textDecoration = "underline";
           attachmentLink.style.display = "flex";
           attachmentLink.style.alignItems = "center";
@@ -960,7 +960,7 @@ async function addMessageToUI(
           : "📎";
 
         const placeholderSpan = document.createElement("span");
-        placeholderSpan.style.color = "#fff";
+        placeholderSpan.style.color = "#333";
         placeholderSpan.style.display = "flex";
         placeholderSpan.style.alignItems = "center";
         placeholderSpan.style.gap = "6px";
@@ -975,7 +975,7 @@ async function addMessageToUI(
         attachmentLink.href = attachmentUrl;
         attachmentLink.target = "_blank";
         attachmentLink.rel = "noopener noreferrer";
-        attachmentLink.style.color = "#fff";
+        attachmentLink.style.color = "#333";
         attachmentLink.style.textDecoration = "underline";
         attachmentLink.style.display = "flex";
         attachmentLink.style.alignItems = "center";
